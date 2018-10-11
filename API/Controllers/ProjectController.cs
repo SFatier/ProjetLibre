@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Controllers;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,30 +11,35 @@ namespace API
     [Route("api/Project")]
     public class ProjectController : Controller
     {
-
-        private readonly APIContext  _context;
+        ProjectDataAccessLayer objProject;
 
         public ProjectController(APIContext context)
         {
-            _context = context;
+            objProject = new ProjectDataAccessLayer(context);
 
-            if (_context.Projects.Count() == 0)
+            if (context.Projects.Count() == 0)
             {
-                _context.Projects.Add(new Project { Nom = "Item1" });
-                _context.SaveChanges();
+                context.Projects.Add(new Project { Nom = "Item1" });
+                context.SaveChanges();
             }
         }
 
         [HttpGet]
-        public ActionResult<List<Project>> GetAll()
+        public ActionResult<List<Project>> Index()
         {
-            return _context.Projects.ToList();
+            return objProject.GetAllProject();
+        }
+
+        [HttpGet("{sort}", Name = "GetProjectSort")]
+        public ActionResult<List<Project>> Index(string sort)
+        {
+            return objProject.GetAllProject(sort);
         }
 
         [HttpGet("{id}", Name = "GetProject")]
-        public ActionResult<Project> GetById(long id)
+        public ActionResult<Project> Details(int id)
         {
-            var item = _context.Projects.Find(id);
+            var item = objProject.GetById(id);
             if (item == null)
             {
                 return NotFound();
@@ -44,41 +50,37 @@ namespace API
         [HttpPost]
         public IActionResult Create(Project item)
         {
-            _context.Projects.Add(item);
-            _context.SaveChanges();
-
+            objProject.InsertProject(item);
             return CreatedAtRoute("GetProject", new { id = item.Id }, item);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(long id, Project item)
+        public IActionResult Edit(int id, Project item)
         {
-            var Project = _context.Projects.Find(id);
+            var Project = objProject.GetById(id);
             if (Project == null)
             {
                 return NotFound();
             }
 
             Project.Nom = item.Nom;
-            Project.LstUtilisateurs = item.LstUtilisateurs;
             Project.LstFile = item.LstFile;
+            Project.LstUtilisateurs = item.LstUtilisateurs;
 
-            _context.Projects.Update(Project);
-            _context.SaveChanges();
+            objProject.UpdateProject(item);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(long id)
+        public IActionResult Delete(int id)
         {
-            var Project = _context.Projects.Find(id);
+            var Project = objProject.GetById(id);
             if (Project == null)
             {
                 return NotFound();
             }
 
-            _context.Projects.Remove(Project);
-            _context.SaveChanges();
+            objProject.DeleteProject(Project);
             return NoContent();
         }
     }

@@ -11,29 +11,35 @@ namespace API.Controllers
     [ApiController]
     public class FileController : ControllerBase
     {
-        private readonly APIContext _context;
+        FileDataAccessLayer objFile;
 
         public FileController(APIContext context)
         {
-            _context = context;
+            objFile = new FileDataAccessLayer(context);
 
-            if (_context.Files.Count() == 0)
+            if (context.Files.Count() == 0)
             {
-                _context.Files.Add(new File { Nom = "Item1" });
-                _context.SaveChanges();
+                context.Files.Add(new File { Nom = "Item1" });
+                context.SaveChanges();
             }
         }
 
         [HttpGet]
-        public ActionResult<List<File>> GetAll()
+        public ActionResult<List<File>> Index()
         {
-            return _context.Files.ToList();
+            return objFile.GetAllFile();
         }
 
-        [HttpGet("{id}", Name = "GetFile")]
-        public ActionResult<File> GetById(long id)
+        [HttpGet("{sort}", Name = "GetFileSort")]
+        public ActionResult<List<File>> Index(string sort)
         {
-            var item = _context.Files.Find(id);
+            return   objFile.GetAllFile(sort);
+        }
+        
+        [HttpGet("{id}", Name = "GetFile")]
+        public ActionResult<File> Details(int id)
+        {
+            var item = objFile.GetById(id);
             if (item == null)
             {
                 return NotFound();
@@ -44,16 +50,14 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult Create(File item)
         {
-            _context.Files.Add(item);
-            _context.SaveChanges();
-
+            objFile.InsertFile(item);
             return CreatedAtRoute("GetFile", new { id = item.Id }, item);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(long id, File item)
+        public IActionResult Edit(int id, File item)
         {
-            var File = _context.Files.Find(id);
+            var File = objFile.GetById(id);
             if (File == null)
             {
                 return NotFound();
@@ -62,22 +66,20 @@ namespace API.Controllers
             File.Nom = item.Nom;
             File.Path = item.Path;
 
-            _context.Files.Update(File);
-            _context.SaveChanges();
+            objFile.UpdateFile(item);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(long id)
+        public IActionResult Delete(int id)
         {
-            var File = _context.Files.Find(id);
+            var File = objFile.GetById(id);
             if (File == null)
             {
                 return NotFound();
             }
 
-            _context.Files.Remove(File);
-            _context.SaveChanges();
+            objFile.DeleteFile(File);
             return NoContent();
         }
     }

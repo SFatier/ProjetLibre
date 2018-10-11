@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Controllers;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,30 +11,35 @@ namespace API
     [Route("api/user")]
     public class UserController : Controller
     {
-
-        private readonly APIContext  _context;
+        UserDataAccessLayer objUser;
 
         public UserController(APIContext context)
         {
-            _context = context;
+            objUser = new UserDataAccessLayer(context);
 
-            if (_context.Users.Count() == 0)
+            if (context.Users.Count() == 0)
             {
-                _context.Users.Add(new User { FirstName = "Item1" });
-                _context.SaveChanges();
+                context.Users.Add(new User { FirstName = "Item1", LastName="Item2" });
+                context.SaveChanges();
             }
         }
 
         [HttpGet]
-        public ActionResult<List<User>> GetAll()
+        public ActionResult<List<User>> Index()
         {
-            return _context.Users.ToList();
+            return objUser.GetAllUser();
         }
 
+        //[HttpGet("{sort}", Name = "GetUserSort")]
+        //public ActionResult<List<User>> Index(string sort)
+        //{
+        //    return objUser.GetAllUser(sort);
+        //}
+
         [HttpGet("{id}", Name = "GetUser")]
-        public ActionResult<User> GetById(long id)
+        public ActionResult<User> Details(int id)
         {
-            var item = _context.Users.Find(id);
+            var item = objUser.GetById(id);
             if (item == null)
             {
                 return NotFound();
@@ -44,41 +50,40 @@ namespace API
         [HttpPost]
         public IActionResult Create(User item)
         {
-            _context.Users.Add(item);
-            _context.SaveChanges();
-
+            objUser.InsertUser(item);
             return CreatedAtRoute("GetUser", new { id = item.Id }, item);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(long id, User item)
+        public IActionResult Edit(int id, User item)
         {
-            var User = _context.Users.Find(id);
+            var User = objUser.GetById(id);
             if (User == null)
             {
                 return NotFound();
             }
 
-            User.FirstName = item.FirstName;
             User.LastName = item.LastName;
+            User.FirstName = item.FirstName;
+            User.Email = item.Email;
+            User.Password = item.Password;
 
-            _context.Users.Update(User);
-            _context.SaveChanges();
+            objUser.UpdateUser(item);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(long id)
+        public IActionResult Delete(int id)
         {
-            var User = _context.Users.Find(id);
+            var User = objUser.GetById(id);
             if (User == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(User);
-            _context.SaveChanges();
+            objUser.DeleteUser(User);
             return NoContent();
         }
+
     }
 }

@@ -10,6 +10,7 @@ namespace API.Models
         public int Id { get; set; }
         public string Nom { get; set; }
         public string Path { get; set; }
-
+        public string Type { get; set; }
+        public DateTime DateCreation{ get; set; }
     }
 }

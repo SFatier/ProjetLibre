@@ -11,6 +11,6 @@ namespace API.Models
         public string Nom{ get; set; }
         public List<User> LstUtilisateurs { get; set; }
         public List<File>  LstFile { get; set; }
-
+        public DateTime Date{ get; set; }
     }
 }
