@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(APIContext))]
-    [Migration("20181011125008_init")]
+    [Migration("20181011142027_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,6 +74,8 @@ namespace API.Migrations
                     b.Property<string>("Password");
 
                     b.Property<int?>("ProjectId");
+
+                    b.Property<int>("role");
 
                     b.HasKey("Id");
 

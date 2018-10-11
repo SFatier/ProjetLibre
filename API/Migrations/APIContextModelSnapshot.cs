@@ -73,6 +73,8 @@ namespace API.Migrations
 
                     b.Property<int?>("ProjectId");
 
+                    b.Property<int>("role");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");

@@ -54,6 +54,7 @@ namespace API.Migrations
                     LastName = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
+                    role = table.Column<int>(nullable: false),
                     Password = table.Column<string>(nullable: true),
                     ProjectId = table.Column<int>(nullable: true)
                 },
