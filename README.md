@@ -23,7 +23,7 @@ MEMO PROJET APP
 	 => add-migration init
 	 => update-database
 
-	 (pour supprimer => Supprimer le dossier Migrations et taper drop-database ds la console => recreer la db)
+(pour supprimer => Supprimer le dossier Migrations et taper drop-database ds la console => recreer la db)
 
 
 Connection de la db dans VS
