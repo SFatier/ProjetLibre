@@ -27,7 +27,7 @@ namespace API
         [HttpGet]
         public ActionResult<List<Project>> Index()
         {
-            return objProject.GetAllProject();
+            return objProject.FindAll();
         }
 
         [HttpGet("{sort}", Name = "GetProjectSort")]
@@ -39,7 +39,7 @@ namespace API
         [HttpGet("{id}", Name = "GetProject")]
         public ActionResult<Project> Details(int id)
         {
-            var item = objProject.GetById(id);
+            var item = objProject.FindById(id);
             if (item == null)
             {
                 return NotFound();
@@ -48,16 +48,16 @@ namespace API
         }
 
         [HttpPost]
-        public IActionResult Create(Project item)
+        public IActionResult Create([FromBody] Project item)
         {
-            objProject.InsertProject(item);
+            objProject.Insert(item);
             return CreatedAtRoute("GetProject", new { id = item.Id }, item);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Edit(int id, Project item)
+        public IActionResult Edit([FromBody] Project item)
         {
-            var Project = objProject.GetById(id);
+            var Project = objProject.FindById(item.Id);
             if (Project == null)
             {
                 return NotFound();
@@ -67,20 +67,20 @@ namespace API
             Project.LstFile = item.LstFile;
             Project.LstUtilisateurs = item.LstUtilisateurs;
 
-            objProject.UpdateProject(item);
+            objProject.Update(item);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var Project = objProject.GetById(id);
+            var Project = objProject.FindById(id);
             if (Project == null)
             {
                 return NotFound();
             }
 
-            objProject.DeleteProject(Project);
+            objProject.Delete(Project.Id);
             return NoContent();
         }
     }

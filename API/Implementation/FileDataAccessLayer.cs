@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace API.Controllers
 {
-    public class FileDataAccessLayer
+    public class FileDataAccessLayer 
     {
         private readonly APIContext db;
 
@@ -69,4 +69,5 @@ namespace API.Controllers
             db.SaveChanges();
         }
     }
+
 }

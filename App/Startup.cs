@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using App.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using App.Models;
 
 namespace App
 {
@@ -39,6 +40,9 @@ namespace App
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+            services.AddSingleton<ProjectService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

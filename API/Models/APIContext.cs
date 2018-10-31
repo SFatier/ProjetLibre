@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Models
+namespace API
 {
     public class APIContext : DbContext
     {
+        public APIContext()
+        {
+        }
+
         public APIContext(DbContextOptions options)  : base(options)
         {
         }
