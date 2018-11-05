@@ -19,13 +19,13 @@ namespace API
 
             if (context.Users.Count() == 0)
             {
-                context.Users.Add(new User { FirstName = "Item1", LastName="Item2" });
+                context.Users.Add(new ApplicationUser { FirstName = "Item1", LastName="Item2" });
                 context.SaveChanges();
             }
         }
 
         [HttpGet]
-        public ActionResult<List<User>> Index()
+        public ActionResult<List<ApplicationUser>> Index()
         {
             return objUser.GetAllUser();
         }
@@ -37,7 +37,7 @@ namespace API
         //}
 
         [HttpGet("{id}", Name = "GetUser")]
-        public ActionResult<User> Details(int id)
+        public ActionResult<ApplicationUser> Details(int id)
         {
             var item = objUser.GetById(id);
             if (item == null)
@@ -48,14 +48,14 @@ namespace API
         }
 
         [HttpPost]
-        public IActionResult Create(User item)
+        public IActionResult Create(ApplicationUser item)
         {
             objUser.InsertUser(item);
             return CreatedAtRoute("GetUser", new { id = item.Id }, item);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Edit(int id, User item)
+        public IActionResult Edit(int id, ApplicationUser item)
         {
             var User = objUser.GetById(id);
             if (User == null)
@@ -66,7 +66,7 @@ namespace API
             User.LastName = item.LastName;
             User.FirstName = item.FirstName;
             User.Email = item.Email;
-            User.Password = item.Password;
+            User.PasswordHash = item.PasswordHash;
 
             objUser.UpdateUser(item);
             return NoContent();

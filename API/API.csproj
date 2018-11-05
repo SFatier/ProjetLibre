@@ -5,10 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Connect\**" />
     <Compile Remove="wwwroot\**" />
+    <Content Remove="Connect\**" />
     <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="Connect\**" />
     <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="Connect\**" />
     <None Remove="wwwroot\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\UserController.cs" />
+    <Compile Remove="Implementation\UserDataAccessLayer.cs" />
   </ItemGroup>
 
   <ItemGroup>
