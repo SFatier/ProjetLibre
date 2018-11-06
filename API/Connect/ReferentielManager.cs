@@ -1,5 +1,4 @@
 ﻿using API.Controllers;
-using API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,19 +16,19 @@ namespace API.DataAccessLayer
 
         #region [ Singleton ]
 
-        public static ReferentielManager Instance
-        {
-            get
-            {
-                lock (s_InstanceLocker)
-                {
-                    if (s_Instance == null)
-                        ct = new APIContext();
-                    s_Instance = new ReferentielManager();
-                }
-                return s_Instance;
-            }
-        }
+        //public static ReferentielManager Instance
+        //{
+        //    get
+        //    {
+        //        lock (s_InstanceLocker)
+        //        {
+        //            if (s_Instance == null)
+        //                ct = new APIContext();
+        //            s_Instance = new ReferentielManager();
+        //        }
+        //        return s_Instance;
+        //    }
+        //}
 
         #endregion [ Singleton ]
 

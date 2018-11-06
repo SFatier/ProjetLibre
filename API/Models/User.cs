@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Identity;
 
 namespace API
 {
@@ -14,25 +15,10 @@ namespace API
         Etudiant = 4
     }
 
-    public class User
+    public class ApplicationUser : IdentityUser
     {
-        public int  Id { get; set; }
-        public string  LastName { get; set; }
+        public string LastName { get; set; }
         public string FirstName { get; set; }
-        public string Email { get; set; }
         public Profil role { get; set; }
-
-        private string password;
-        public string Password {
-            get
-            {
-                return password;
-            }
-
-            set
-            {
-                password = Encrypt.base64Encode(value); ;
-            }
-        }
     }
 }

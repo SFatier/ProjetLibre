@@ -17,9 +17,9 @@ namespace API
         {
             objProject = new ProjectDataAccessLayer(context);
 
-            if (context.Projects.Count() == 0)
+            if (context.Project.Count() == 0)
             {
-                context.Projects.Add(new Project { Nom = "Item1" });
+                context.Project.Add(new Project { Nom = "Item1" });
                 context.SaveChanges();
             }
         }
@@ -64,8 +64,8 @@ namespace API
             }
 
             Project.Nom = item.Nom;
-            Project.LstFile = item.LstFile;
-            Project.LstUtilisateurs = item.LstUtilisateurs;
+            //Project.LstFile = item.LstFile;
+            //Project.LstUtilisateurs = item.LstUtilisateurs;
 
             objProject.Update(item);
             return NoContent();

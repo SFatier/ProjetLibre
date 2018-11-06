@@ -14,7 +14,7 @@ namespace API.Controllers
             db = context;
         }
 
-        public List<User>  GetAllUser()
+        public List<ApplicationUser>  GetAllUser()
         {
             return db.Users.ToList();
         }
@@ -46,24 +46,24 @@ namespace API.Controllers
         //}
 
 
-        public User GetById(int id)
+        public ApplicationUser GetById(int id)
         {
             return db.Users.Find(id);
         }
 
-        public void InsertUser(User item)
+        public void InsertUser(ApplicationUser item)
         {
             db.Users.Add(item);
             db.SaveChanges();
         }
 
-        public void UpdateUser(User User)
+        public void UpdateUser(ApplicationUser User)
         {
             db.Users.Update(User);
             db.SaveChanges();
         }
 
-        public void DeleteUser(User User)
+        public void DeleteUser(ApplicationUser User)
         {
             db.Users.Remove(User);
             db.SaveChanges();

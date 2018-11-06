@@ -16,12 +16,12 @@ namespace API.Controllers
 
         public List<Project>  FindAll()
         {
-            return Container.Projects.ToList();
+            return Container.Project.ToList();
         }
         
         public List<Project> GetAllProject(string sort)
         {
-            var lst = Container.Projects.ToList();
+            var lst = Container.Project.ToList();
 
             switch (sort)
             {
@@ -44,25 +44,25 @@ namespace API.Controllers
         
         public Project FindById(int id)
         {
-            return Container.Projects.Find(id);
+            return Container.Project.Find(id);
         }
 
         public void Insert(Project item)
         {
-            Container.Projects.Add(item);
+            Container.Project.Add(item);
             Container.SaveChanges();
         }
 
         public void Update(Project Project)
         {
-            Container.Projects.Update(Project);
+            Container.Project.Update(Project);
             Container.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            Project project = Container.Projects.Find(id);
-            Container.Projects.Remove(project);
+            Project project = Container.Project.Find(id);
+            Container.Project.Remove(project);
             Container.SaveChanges();
         }
     }

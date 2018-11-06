@@ -3,22 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace API
 {
-    public class APIContext : DbContext
+    public class APIContext : IdentityDbContext
     {
-        public APIContext()
+        public APIContext(DbContextOptions<APIContext> options)  : base(options)
         {
         }
 
-        public APIContext(DbContextOptions options)  : base(options)
-        {
-        }
-
-        public DbSet<User> Users { get; set; }
-        public DbSet<Project> Projects { get; set; }
+        public DbSet<Project> Project { get; set; }
         public DbSet<File> Files { get; set; }
     }
 }
