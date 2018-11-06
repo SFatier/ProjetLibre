@@ -24,7 +24,7 @@ namespace App.Controllers
 
         // GET: Projects
         public async Task<IActionResult> Index()
-        {
+        {           
             return View(await _context.Project.ToListAsync());
            // return View(_service.Get());
         }
@@ -82,6 +82,7 @@ namespace App.Controllers
             {
                 return NotFound();
             }
+
             return View(project);
         }
 

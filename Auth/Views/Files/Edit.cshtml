@@ -40,10 +40,21 @@
     </div>
 </div>
 
+@if (ViewBag.type == "pdf")
+{
+    <div id="zone_file"></div>
+}
+
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/site.min.js"></script>
+    <script src="~/js/pdfobject.js"></script>
+    <script>
+        PDFObject.embed("https://localhost:44362/file/pdf_edit.pdf", "#zone_file");
+    </script>
+
 }
