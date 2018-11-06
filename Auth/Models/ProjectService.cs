@@ -1,29 +1,50 @@
 ﻿using API.Models;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
+using System.Threading.Tasks;
 
-namespace Auth.Models
+namespace App.Models
 {
-    public class ProjectService
+    public class FileService
     {
         HttpClient _client = new HttpClient();
-        private string uri = "https://localhost:44395/api/project";
-               
+        private string uri = "https://localhost:44395/api/file";
+
         /// <summary>
         /// Récupère l'ensemble des projets
         /// </summary>
         /// <returns></returns>
-        public   List<Project> Get()
+        public List<File> Get()
+        {
+            var resp = _client.GetAsync(uri).Result;
+
+            if (resp.IsSuccessStatusCode)
+                return JsonConvert.DeserializeObject<List<File>>(resp.Content.ReadAsStringAsync().Result);
+            else
+                return null;
+        }
+    }
+
+
+    public class ProjectService
+    {
+        HttpClient _client = new HttpClient();
+        private string uri = "https://localhost:44395/api/project";
+
+        /// <summary>
+        /// Récupère l'ensemble des projets
+        /// </summary>
+        /// <returns></returns>
+        public List<Project> Get()
         {
             var resp = _client.GetAsync(uri).Result;
 
             if (resp.IsSuccessStatusCode)
                 return JsonConvert.DeserializeObject<List<Project>>(resp.Content.ReadAsStringAsync().Result);
-           else
+            else
                 return null;
         }
 
@@ -34,7 +55,7 @@ namespace Auth.Models
         /// <returns></returns>
         public Project GetById(int id)
         {
-            var resp = _client.GetAsync("https://localhost:44395/api/project/"+ id).Result;
+            var resp = _client.GetAsync("https://localhost:44395/api/project/" + id).Result;
 
             if (resp.IsSuccessStatusCode)
                 return JsonConvert.DeserializeObject<Project>(resp.Content.ReadAsStringAsync().Result);
