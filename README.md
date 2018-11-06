@@ -10,6 +10,18 @@ et la coller a la place de la mienne dans startup.cs
 dans le dossier du projet ouvrir cmd et faire comme ligne de commande dotnet ef migrations add init
 puis dotnet ef database update
 
+
+Connection de la db dans VS
+
+Cliquer sur l'explorateur de données 
+Ajouter db en MSQL SERVER
+AJouter comme non du serveur (Localdb)\MSSQL...
+Authentification Win
+AJouter le nom de la db 
+Connexion
+
+
+/--old
 MEMO PROJET APP
 
 1- Creation du projet
@@ -26,14 +38,5 @@ MEMO PROJET APP
 (pour supprimer => Supprimer le dossier Migrations et taper drop-database ds la console => recreer la db)
 
 
-Connection de la db dans VS
-
-Cliquer sur l'explorateur de données 
-Ajouter db en MSQL SERVER
-AJouter comme non du serveur (Localdb)\MSSQL...
-Authentification Win
-AJouter le nom de la db 
-Connexion
 
 
-ps:  db son créé pour le moment 1 pour le projet API et 1 pour le projet app. Le but est d'utiliser que le projet API comme liaison de db
