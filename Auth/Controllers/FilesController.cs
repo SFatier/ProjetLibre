@@ -46,6 +46,23 @@ namespace App.Controllers
             return View(file);
         }
 
+        // GET: Files/Ouvrir
+        public async Task<IActionResult> Ouvrir(int? id)
+        {
+            if (id == null)
+            {
+                 return NotFound();
+            }
+
+            var file = await _context.Files.FirstOrDefaultAsync(m => m.Id == id);
+            
+            string cmd = "explorer.exe";
+            string arg = "/select, " + file.Path;
+            System.Diagnostics.Process.Start(cmd, arg);
+
+            return RedirectToAction("Index", "Files");
+        }
+
         // GET: Files/Create
         public IActionResult Create()
         {
@@ -81,9 +98,24 @@ namespace App.Controllers
             {
                 return NotFound();
             }
+
+            #region [Affichage du pdf]
+            string filedb =  "C:\\Users\\sigt_sf\\Documents\\GitHub\\ProjetLibre\\Auth\\wwwroot\\file\\pdf_edit.pdf";
+
+            if (System.IO.File.Exists(filedb))
+            {
+                    System.IO.File.Delete(filedb);
+            }
+
+            if (file.Type == "pdf")
+                SaveFileInFolder(filedb, System.IO.File.ReadAllBytes(file.Path));
+
+            ViewBag.type = file.Type;
+            #endregion
+
             return View(file);
         }
-
+        
         // POST: Files/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -151,6 +183,20 @@ namespace App.Controllers
         private bool FileExists(int id)
         {
             return _context.Files.Any(e => e.Id == id);
+        }
+        
+        /// <summary>
+        /// Creer le doc dans le dossier wwwroot/pdf
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="file"></param>
+        private static void SaveFileInFolder(string filename, byte[] file)
+        {
+            System.IO.FileInfo fi = new System.IO.FileInfo(filename);
+            using (System.IO.FileStream filestream = fi.Create())
+            {
+                filestream.Write(file, 0, file.Length);
+            }
         }
     }
 }
