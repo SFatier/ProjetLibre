@@ -24,7 +24,7 @@ namespace App.Controllers
 
         // GET: Projects
         public async Task<IActionResult> Index()
-        {           
+        {
             return View(await _context.Project.ToListAsync());
            // return View(_service.Get());
         }
@@ -44,12 +44,18 @@ namespace App.Controllers
                 return NotFound();
             }
 
+            var users = _context.Users.FromSql("EXECUTE  GetUsersByProjectId {0} ", 1).ToList();
+
+            ViewBag.lstUsers = users;
+
             return View(project);
         }
 
         // GET: Projects/Create
         public IActionResult Create()
         {
+            ViewBag.lstUsers = _context.Users.Select(x =>x.UserName ).ToList();
+
             return View();
         }
 
@@ -64,6 +70,9 @@ namespace App.Controllers
             {
                 _context.Add(project);
                 await _context.SaveChangesAsync();
+
+               // var users = _context.Users.FromSql("EXECUTE  InsertUsersByProjectId {0} ", project.Id).ToList();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(project);

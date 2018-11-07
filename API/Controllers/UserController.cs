@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Controllers;
 using API.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API
@@ -25,7 +26,7 @@ namespace API
         }
 
         [HttpGet]
-        public ActionResult<List<ApplicationUser>> Index()
+        public ActionResult<List<IdentityUser>> Index()
         {
             return objUser.GetAllUser();
         }
@@ -37,7 +38,7 @@ namespace API
         //}
 
         [HttpGet("{id}", Name = "GetUser")]
-        public ActionResult<ApplicationUser> Details(int id)
+        public ActionResult<IdentityUser> Details(int id)
         {
             var item = objUser.GetById(id);
             if (item == null)
@@ -63,8 +64,8 @@ namespace API
                 return NotFound();
             }
 
-            User.LastName = item.LastName;
-            User.FirstName = item.FirstName;
+            //User.LastName = item.LastName;
+           // User.FirstName = item.FirstName;
             User.Email = item.Email;
             User.PasswordHash = item.PasswordHash;
 
