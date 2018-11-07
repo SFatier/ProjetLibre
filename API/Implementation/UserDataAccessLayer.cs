@@ -1,4 +1,5 @@
 ﻿using API.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace API.Controllers
             db = context;
         }
 
-        public List<ApplicationUser>  GetAllUser()
+        public List<IdentityUser>  GetAllUser()
         {
             return db.Users.ToList();
         }
@@ -46,7 +47,7 @@ namespace API.Controllers
         //}
 
 
-        public ApplicationUser GetById(int id)
+        public IdentityUser GetById(int id)
         {
             return db.Users.Find(id);
         }
@@ -63,7 +64,7 @@ namespace API.Controllers
             db.SaveChanges();
         }
 
-        public void DeleteUser(ApplicationUser User)
+        public void DeleteUser(IdentityUser User)
         {
             db.Users.Remove(User);
             db.SaveChanges();
