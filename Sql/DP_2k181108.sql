@@ -55,3 +55,17 @@ BEGIN
 		  ,[PhoneNumber] = @paramPhone		
 	 WHERE Id = @paramId
 END
+
+GO
+CREATE PROCEDURE InsertUsersByProjectId
+	@paramProjectId int,
+	@paramUserId	nvarchar(450)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	Insert into Project_Users (ProjectID, UserId) values (@paramProjectId,@paramUserId);
+END

@@ -45,8 +45,7 @@ namespace API.Controllers
 
         //    return lst;
         //}
-
-
+        
         public IdentityUser GetById(int id)
         {
             return db.Users.Find(id);

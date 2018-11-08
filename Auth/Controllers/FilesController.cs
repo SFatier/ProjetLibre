@@ -74,10 +74,12 @@ namespace App.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nom,Path,Type,DateCreation")] File file)
+        public async Task<IActionResult> Create([Bind("Id,Nom,Path,Type")] File file)
         {
             if (ModelState.IsValid)
             {
+                               file.DateCreation = DateTime.Now;
+                file.Type = System.IO.Path.GetDirectoryName(file.Path);
                 _context.Add(file);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

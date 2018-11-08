@@ -54,7 +54,7 @@ namespace App.Controllers
         // GET: Projects/Create
         public IActionResult Create()
         {
-            ViewBag.lstUsers = _context.Users.Select(x =>x.UserName ).ToList();
+            ViewBag.lstUsers = _context.Users.Select( x => new Users() { UserId = x.Id, Username = x.UserName } ).ToList();
 
             return View();
         }
@@ -64,14 +64,18 @@ namespace App.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nom,Description,Date")] Project project)
+        public async Task<IActionResult> Create([Bind("Id,Nom,Description")] Projet project, List<string> states)
         {
             if (ModelState.IsValid)
             {
+                project.Date = DateTime.Now;
                 _context.Add(project);
                 await _context.SaveChangesAsync();
 
-               // var users = _context.Users.FromSql("EXECUTE  InsertUsersByProjectId {0} ", project.Id).ToList();
+                //for(int i=0; i < states.Count(); i++)
+                //{
+                //    _context.ProjectUsers.FromSql("EXECUTE  InsertUsersByProjectId {0}, {1} ", project.Id, states[i]);
+                //}
 
                 return RedirectToAction(nameof(Index));
             }

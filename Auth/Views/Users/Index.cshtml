@@ -2,12 +2,13 @@
 
 @{
     ViewData["Title"] = "Users";
+    var getlist = ViewBag.Groups as IEnumerable<App.Models.Groups>;
 }
 
-<h2>Users</h2>
+<h2>Listes des utilisateurs</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New users</a>
 </p>
 <table class="table">
     <thead>
@@ -22,32 +23,47 @@
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             @*<th>
-                @Html.DisplayNameFor(model => model.role)
-            </th>*@
+                    @Html.DisplayNameFor(model => model.role)
+                </th>*@
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.role)
-            </td>*@
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UserId">Details</a>|
-                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.role)
+                    </td>*@
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.UserId">Details</a>|
+                    <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+
+<div >
+    <h2>Listes des groupes</h2>
+    <p>
+        <a asp-action="CreateGroups">Create New groups</a>
+    </p>
+    <ul class="list-group">
+        @foreach (var item in getlist)
+        {
+            <li class="list-group-item">@item.Nom <span class="badge">@item.Users.Count()</span></li>
+        }
+    </ul>
+</div>

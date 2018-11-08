@@ -12,4 +12,10 @@ namespace App.Models
         public string Email{ get; set; }
         public string role{ get; set; }
     }
+
+    public class Groups
+    {
+        public string Nom { get; set; }
+        public List<Users> Users { get; set; }
+    }
 }
