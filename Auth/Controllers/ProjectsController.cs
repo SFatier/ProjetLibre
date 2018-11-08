@@ -44,7 +44,7 @@ namespace App.Controllers
                 return NotFound();
             }
 
-            var users = _context.Users.FromSql("EXECUTE  GetUsersByProjectId {0} ", 1).ToList();
+            var users = _context.Users.FromSql("EXECUTE  GetUsersByProjectId {0} ", id).ToList();
 
             ViewBag.lstUsers = users;
 
