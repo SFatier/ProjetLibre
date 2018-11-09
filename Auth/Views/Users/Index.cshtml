@@ -58,12 +58,12 @@
 <div >
     <h2>Listes des groupes</h2>
     <p>
-        <a asp-action="CreateGroups">Create New groups</a>
+        <a asp-action="CreateGroup">Create New groups</a>
     </p>
     <ul class="list-group">
         @foreach (var item in getlist)
         {
-            <li class="list-group-item">@item.Nom <span class="badge">@item.Users.Count()</span></li>
+            <li class="list-group-item">@item.Nom <span class="badge">@item.NbUsers</span></li>
         }
     </ul>
 </div>

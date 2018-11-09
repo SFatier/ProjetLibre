@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28010.2019
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{69617E17-A738-4632-AF7C-BAFCEBE0BB3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "Auth\App.csproj", "{F60F8C68-66F8-4551-AFD7-5D4B4099346B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "Auth\App.csproj", "{F60F8C68-66F8-4551-AFD7-5D4B4099346B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

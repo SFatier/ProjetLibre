@@ -1,4 +1,5 @@
-﻿using System;
+﻿using API.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +14,9 @@ namespace App.Models
         public string role{ get; set; }
     }
 
-    public class Groups
+    public class Groups : Group
     {
-        public string Nom { get; set; }
         public List<Users> Users { get; set; }
+        public int NbUsers { get; set; }
     }
 }

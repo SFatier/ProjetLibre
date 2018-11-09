@@ -29,12 +29,14 @@ namespace App.Controllers
         {
             var usersWithRoles = _context.Users.FromSql("EXECUTE  GetAllUsers ").ToList();
             List<Users> lstUsers = usersWithRoles.Select(x => new Users { UserId = x.Id, Username = x.UserName, Email = x.Email }).ToList();
-
-            /*Pour test*/
             List<Groups> groups = new List<Groups>();
-            groups.Add(new Groups() { Nom ="Groupe 1", Users = lstUsers});
-            groups.Add(new Groups() { Nom = "Groupe 2", Users = lstUsers });
-
+            var lstgroups = _context.Groups.ToList();
+            lstgroups.ForEach(x =>
+            {
+                var users = _context.Users.FromSql("EXECUTE  GetUserByGroupId {0} ", x.Id).ToList();
+                groups.Add(new Groups() { Id = x.Id, Nom = x.Nom, NbUsers = users.Count() });
+            });
+            
             ViewBag.Groups = groups;
             return View(lstUsers);
         }
@@ -49,6 +51,13 @@ namespace App.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
+            return View();
+        }
+        
+        //Get: Users/CreateGroup
+       public ActionResult CreateGroup()
+        {
+            ViewBag.lstUsers = _context.Users.Select(x => new Users() { UserId = x.Id, Username = x.UserName }).ToList();
             return View();
         }
 
@@ -73,7 +82,35 @@ namespace App.Controllers
                 return View();
             }
         }
-            
+
+        // POST: Users/CreateGroup
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateGroup([Bind("Nom,Users")] Groups groups, List<string> states)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    API.Models.Group group = new API.Models.Group() { Nom = groups.Nom };
+                    _context.Groups.Add(group);
+                    await _context.SaveChangesAsync();
+                    
+                    foreach (var item in states)
+                    {
+                        _context.Users.FromSql("EXECUTE  [InsertUsersByGroupId] {0},{1} ", group.Id, item);
+                        await _context.SaveChangesAsync();
+                    }
+
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+        
         // GET: Users/Edit/5
         public ActionResult Edit(string id)
         {
@@ -173,3 +210,4 @@ namespace App.Controllers
         #endregion
     }
 }
+ 
