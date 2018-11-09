@@ -159,6 +159,22 @@ namespace App.Controllers
             }
         }
 
+        // POST: Users/DeleteGroup/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteGroup(int id)
+        {
+            try
+            {
+                _context.Users.FromSql("EXECUTE  DeleteGroup{0}", id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
         #region GeneratePassword
         public static string GenerateRandomPassword(PasswordOptions opts = null)
         {
