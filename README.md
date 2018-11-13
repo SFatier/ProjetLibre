@@ -13,3 +13,6 @@ puis dotnet ef database update
 Pour tester il faut demarrer les deux projets
 
 click droit sur le nom de la solution >> propriétés >> select plusieurs projets de demarrage >> select colonne action Demarrer sur les deux projets >> appliquer >> OK >> F5
+
+>>Ne pas oublier d'ajouter les procédures stockées dans la bdd. Les fichiers sont dans le dossier SQL.
+
