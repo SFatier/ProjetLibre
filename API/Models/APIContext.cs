@@ -17,6 +17,8 @@ namespace API
 
         public DbSet<Project> Project { get; set; }
         public DbSet<File> Files { get; set; }
+        public DbSet<Group> Groups { get; set; }
+
 
     }
 }
