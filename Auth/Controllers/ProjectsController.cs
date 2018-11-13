@@ -1,61 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using API;
-using API.Models;
 using App.Models;
 
 namespace App.Controllers
 {
     public class ProjectsController : Controller
     {
-        private readonly APIContext _context;
-        // private readonly ProjectService _service;
-
-        public ProjectsController(APIContext context/*, ProjectService projectService*/)
+         // GET: Projects
+        public  IActionResult Index()
         {
-            _context = context;
-           // _service = projectService; 
-        }
-
-        // GET: Projects
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Project.ToListAsync());
-           // return View(_service.Get());
+           List<Projet> lstproject = ReferentielManager.Instance.GetAllProjet();
+            return View(lstproject);
         }
 
         // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var project = await _context.Project
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (project == null)
-            {
-                return NotFound();
-            }
-
-            var users = _context.Users.FromSql("EXECUTE  GetUsersByProjectId {0} ", id).ToList();
-
+            var project = ReferentielManager.Instance.GetProjetById(id);
+            var users = ReferentielManager.Instance.GetUsersByProjectId(id);  
             ViewBag.lstUsers = users;
-
             return View(project);
         }
 
         // GET: Projects/Create
         public IActionResult Create()
         {
-            ViewBag.lstUsers = _context.Users.Select( x => new Users() { UserId = x.Id, Username = x.UserName } ).ToList();
-
+            ViewBag.lstUsers = ReferentielManager.Instance.GetAllUsers();
+            ViewBag.lstFiles = ReferentielManager.Instance.GetAllFile();
             return View();
         }
 
@@ -64,38 +37,25 @@ namespace App.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nom,Description")] Projet project, List<string> states)
+        public IActionResult Create([Bind("Id,Nom,Description")] Projet projet, List<string> states)
         {
             if (ModelState.IsValid)
             {
-                project.Date = DateTime.Now;
-                _context.Add(project);
-                await _context.SaveChangesAsync();
-
-                //for(int i=0; i < states.Count(); i++)
-                //{
-                //    _context.ProjectUsers.FromSql("EXECUTE  InsertUsersByProjectId {0}, {1} ", project.Id, states[i]);
-                //}
-
+                projet.Date = DateTime.Now;
+                ReferentielManager.Instance.AddProjet(projet);
                 return RedirectToAction(nameof(Index));
             }
-            return View(project);
+            return View(projet);
         }
 
         // GET: Projects/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var project = await _context.Project.FindAsync(id);
+            var project = ReferentielManager.Instance.GetProjetById(id);
             if (project == null)
             {
                 return NotFound();
             }
-
             return View(project);
         }
 
@@ -104,9 +64,9 @@ namespace App.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nom,Description,Date")] Project project)
+        public IActionResult Edit(int id, [Bind("Id,Nom,Description,Date")] Projet projet)
         {
-            if (id != project.Id)
+            if (id != projet.Id)
             {
                 return NotFound();
             }
@@ -115,35 +75,21 @@ namespace App.Controllers
             {
                 try
                 {
-                    _context.Update(project);
-                    await _context.SaveChangesAsync();
+                    ReferentielManager.Instance.UpdateProjet(projet);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProjectExists(project.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                 //
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(project);
+            return View(projet);
         }
 
         // GET: Projects/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var project = await _context.Project
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var project = ReferentielManager.Instance.GetProjetById(id);
             if (project == null)
             {
                 return NotFound();
@@ -155,17 +101,11 @@ namespace App.Controllers
         // POST: Projects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var project = await _context.Project.FindAsync(id);
-            _context.Project.Remove(project);
-            await _context.SaveChangesAsync();
+            var project = ReferentielManager.Instance.GetProjetById(id);
+            ReferentielManager.Instance.DeleteProjet(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ProjectExists(int id)
-        {
-            return _context.Project.Any(e => e.Id == id);
         }
     }
 }

@@ -1,64 +1,39 @@
-﻿using API.Models;
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace App.Models
 {
-    public class FileService
+    public class ProjetService : IProjetService
     {
+        public ProjetService()
+        {
+
+        }
+
         HttpClient _client = new HttpClient();
-        private string uri = "https://localhost:44395/api/file";
+        private string uri = "https://localhost:44395/api/Project";
 
         /// <summary>
         /// Récupère l'ensemble des projets
         /// </summary>
         /// <returns></returns>
-        public List<File> Get()
+        public List<Projet> Get()
         {
             var resp = _client.GetAsync(uri).Result;
 
             if (resp.IsSuccessStatusCode)
-                return JsonConvert.DeserializeObject<List<File>>(resp.Content.ReadAsStringAsync().Result);
+                return JsonConvert.DeserializeObject<List<Projet>>(resp.Content.ReadAsStringAsync().Result);
             else
                 return null;
         }
-    }
-
-
-    public class ProjectService
-    {
-        HttpClient _client = new HttpClient();
-        private string uri = "https://localhost:44395/api/project";
-
-        /// <summary>
-        /// Récupère l'ensemble des projets
-        /// </summary>
-        /// <returns></returns>
-        public List<Project> Get()
+             
+        public Projet GetById(int id)
         {
-            var resp = _client.GetAsync(uri).Result;
+            var resp = _client.GetAsync(uri + id).Result;
 
             if (resp.IsSuccessStatusCode)
-                return JsonConvert.DeserializeObject<List<Project>>(resp.Content.ReadAsStringAsync().Result);
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Récupère un projet par son id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Project GetById(int id)
-        {
-            var resp = _client.GetAsync("https://localhost:44395/api/project/" + id).Result;
-
-            if (resp.IsSuccessStatusCode)
-                return JsonConvert.DeserializeObject<Project>(resp.Content.ReadAsStringAsync().Result);
+                return JsonConvert.DeserializeObject<Projet>(resp.Content.ReadAsStringAsync().Result);
             else
                 return null;
         }
@@ -66,12 +41,12 @@ namespace App.Models
         /// <summary>
         /// Ajouter un projet
         /// </summary>
-        /// <param name="project"></param>
+        /// <param name="Projet"></param>
         /// <returns></returns>
-        public bool Add(Project project)
+        public bool Add(Projet Projet)
         {
-            //string send = JsonConvert.SerializeObject(project);
-            StringContent content = new StringContent(JsonConvert.SerializeObject(project), System.Text.Encoding.UTF8, "application/json");
+            //string send = JsonConvert.SerializeObject(Projet);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Projet), System.Text.Encoding.UTF8, "application/json");
             var resp = _client.PostAsync(uri, content).Result;
 
             if (resp.IsSuccessStatusCode)
@@ -87,7 +62,7 @@ namespace App.Models
         /// <returns></returns>
         public bool DeleteById(int id)
         {
-            var resp = _client.DeleteAsync("https://localhost:44395/api/project/" + id).Result;
+            var resp = _client.DeleteAsync(uri+ "/"+  id).Result;
 
             if (resp.IsSuccessStatusCode)
                 return true;
@@ -98,18 +73,19 @@ namespace App.Models
         /// <summary>
         /// Modifie un projet
         /// </summary>
-        /// <param name="project"></param>
+        /// <param name="Projet"></param>
         /// <returns></returns>
-        public bool Update(Project project)
+        public bool Update(Projet Projet)
         {
-            StringContent content = new StringContent(JsonConvert.SerializeObject(project), System.Text.Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Projet), System.Text.Encoding.UTF8, "application/json");
 
-            var resp = _client.PutAsync(uri + "/" + project.Id, content).Result;
+            var resp = _client.PutAsync(uri + "/" + Projet.Id, content).Result;
 
             if (resp.IsSuccessStatusCode)
                 return true;
             else
                 return false;
         }
+
     }
 }

@@ -5,39 +5,28 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using API;
-using API.Models;
 using App.Models;
 
 namespace App.Controllers
 {
     public class FilesController : Controller
     {
-        private readonly APIContext _context;
-       // private readonly FileService _fileService;
-
-        public FilesController(APIContext context/*, FileService fileService*/)
-        {
-            _context = context;
-           // _fileService = fileService;
-        }
-
         // GET: Files
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Files.ToListAsync());
+            List<File> lstfiles = ReferentielManager.Instance.GetAllFile();
+            return View(lstfiles);
         }
 
         // GET: Files/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var file = await _context.Files
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var file = ReferentielManager.Instance.GetFileById(id);
             if (file == null)
             {
                 return NotFound();
@@ -47,15 +36,10 @@ namespace App.Controllers
         }
 
         // GET: Files/Ouvrir
-        public async Task<IActionResult> Ouvrir(int? id)
+        public IActionResult Ouvrir(int id)
         {
-            if (id == null)
-            {
-                 return NotFound();
-            }
+            var file = ReferentielManager.Instance.GetFileById(id);
 
-            var file = await _context.Files.FirstOrDefaultAsync(m => m.Id == id);
-            
             string cmd = "explorer.exe";
             string arg = "/select, " + file.Path;
             System.Diagnostics.Process.Start(cmd, arg);
@@ -74,28 +58,27 @@ namespace App.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nom,Path,Type")] File file)
+        public IActionResult Create([Bind("Id,Nom,Path,Type")] File file)
         {
             if (ModelState.IsValid)
             {
-                               file.DateCreation = DateTime.Now;
+                file.DateCreation = DateTime.Now;
                 file.Type = System.IO.Path.GetDirectoryName(file.Path);
-                _context.Add(file);
-                await _context.SaveChangesAsync();
+                ReferentielManager.Instance.AddFile(file);
                 return RedirectToAction(nameof(Index));
             }
             return View(file);
         }
 
         // GET: Files/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var file = await _context.Files.FindAsync(id);
+            var file = ReferentielManager.Instance.GetFileById(id);
             if (file == null)
             {
                 return NotFound();
@@ -123,7 +106,7 @@ namespace App.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nom,Path,Type,DateCreation")] File file)
+        public IActionResult Edit(int id, [Bind("Id,Nom,Path,Type,DateCreation")] File file)
         {
             if (id != file.Id)
             {
@@ -134,8 +117,7 @@ namespace App.Controllers
             {
                 try
                 {
-                    _context.Update(file);
-                    await _context.SaveChangesAsync();
+                    ReferentielManager.Instance.UpdateFile(file);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -154,15 +136,14 @@ namespace App.Controllers
         }
 
         // GET: Files/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var file = await _context.Files
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var file = ReferentielManager.Instance.GetFileById(id);
             if (file == null)
             {
                 return NotFound();
@@ -174,17 +155,23 @@ namespace App.Controllers
         // POST: Files/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var file = await _context.Files.FindAsync(id);
-            _context.Files.Remove(file);
-            await _context.SaveChangesAsync();
+            ReferentielManager.Instance.DeleteFile(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool FileExists(int id)
         {
-            return _context.Files.Any(e => e.Id == id);
+           File file = ReferentielManager.Instance.GetFileById(id);
+            if (file != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         
         /// <summary>

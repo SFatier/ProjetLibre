@@ -1,5 +1,6 @@
 ﻿using API.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,6 +61,12 @@ namespace API.Controllers
         public void UpdateUser(ApplicationUser User)
         {
             db.Users.Update(User);
+            db.SaveChanges();
+        }
+
+        internal void InsertUsersByGroupId(string item, int groupId)
+        {
+            db.Users.FromSql("EXECUTE  [InsertUsersByGroupId] {0},{1} ", groupId, item);
             db.SaveChanges();
         }
 

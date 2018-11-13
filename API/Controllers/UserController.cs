@@ -55,6 +55,13 @@ namespace API
             return CreatedAtRoute("GetUser", new { id = item.Id }, item);
         }
 
+        [HttpPost]
+        public IActionResult CreateUserByGroupId(int groupId)
+        {
+            objUser.InsertUsersByGroupId("ee9231a7-a9fc-4f32-9ee9-2b809b719d62", groupId);
+            return NoContent();
+        }
+
         [HttpPut("{id}")]
         public IActionResult Edit(int id, ApplicationUser item)
         {

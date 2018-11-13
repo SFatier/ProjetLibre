@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using API;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using App.Models;
 
 namespace Auth
 {
@@ -39,6 +40,10 @@ namespace Auth
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<APIContext>();
+
+            services.AddSingleton<ProjetService>();
+            services.AddSingleton<FileService>();
+            services.AddSingleton<UserService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

@@ -27,16 +27,8 @@ namespace App.Controllers
         // GET: Users
         public ActionResult Index()
         {
-            var usersWithRoles = _context.Users.FromSql("EXECUTE  GetAllUsers ").ToList();
-            List<Users> lstUsers = usersWithRoles.Select(x => new Users { UserId = x.Id, Username = x.UserName, Email = x.Email }).ToList();
-            List<Groups> groups = new List<Groups>();
-            var lstgroups = _context.Groups.ToList();
-            lstgroups.ForEach(x =>
-            {
-                var users = _context.Users.FromSql("EXECUTE  GetUserByGroupId {0} ", x.Id).ToList();
-                groups.Add(new Groups() { Id = x.Id, Nom = x.Nom, NbUsers = users.Count() });
-            });
-            
+            List<Users> lstUsers = ReferentielManager.Instance.GetAllUsers();
+            List<Groups> groups = ReferentielManager.Instance.GetAllGroups();            
             ViewBag.Groups = groups;
             return View(lstUsers);
         }
@@ -44,8 +36,8 @@ namespace App.Controllers
         // GET: Users/Details/5
         public ActionResult Details(string id)
         {
-            var user = _context.Users.FromSql("EXECUTE  GetUsersById {0}", id).FirstOrDefault();
-            return View(new Users() { UserId = user.Id, Username = user.UserName, Email = user.Email, role = "" });
+            Users user = ReferentielManager.Instance.GetUsersById(id);
+            return View(user);
         }
 
         // GET: Users/Create
@@ -57,14 +49,14 @@ namespace App.Controllers
         //Get: Users/CreateGroup
        public ActionResult CreateGroup()
         {
-            ViewBag.lstUsers = _context.Users.Select(x => new Users() { UserId = x.Id, Username = x.UserName }).ToList();
+            ViewBag.lstUsers = ReferentielManager.Instance.GetAllUsers();
             return View();
         }
 
         // POST: Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,Username,Email,role")] Users user)
+        public async Task<IActionResult> Create([Bind("Id,Username,Email,role")] Users user)
         {
             try
             {
@@ -114,19 +106,19 @@ namespace App.Controllers
         // GET: Users/Edit/5
         public ActionResult Edit(string id)
         {
-            var user = _context.Users.FromSql("EXECUTE  GetUsersById {0}", id).FirstOrDefault();
-            return View(new Users() { UserId = user.Id, Username = user.UserName, Email = user.Email, role = "" });
+            Users user = ReferentielManager.Instance.GetUsersById(id);
+            return View(user);
         }
 
         // POST: Users/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("UserId,Username,Email,role")]Users user)
+        public async Task<IActionResult> Edit([Bind("Id,Username,Email,role")]Users user)
         {
             try
             {
                 // TODO: Add update logic here
-                _context.Users.FromSql("EXECUTE  UpdateUser {0},{1},{2},{3} ", user.UserId, user.Username, user.Email, user.role).ToList();
+                _context.Users.FromSql("EXECUTE  UpdateUser {0},{1},{2},{3} ", user.Id, user.Username, user.Email, user.role).ToList();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -138,8 +130,8 @@ namespace App.Controllers
         // GET: Users/Delete/5
         public ActionResult Delete(string id)
         {
-           var user =  _context.Users.FromSql("EXECUTE  GetUsersById {0}", id).FirstOrDefault();        
-            return View(new Users() { UserId = user.Id, Username = user.UserName, Email = user.Email,  role = ""});
+            Users user = ReferentielManager.Instance.GetUsersById(id);
+            return View(user);
         }
 
         // POST: Users/Delete/5
@@ -149,8 +141,7 @@ namespace App.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
-                _context.Users.FromSql("EXECUTE  DeleteUser {0}", id);
+                ReferentielManager.Instance.DeleteUsers(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -1,27 +1,28 @@
-﻿using API.DataAccessLayer;
-using API.Models;
+﻿using API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace API.Controllers
 {
-    public class ProjectDataAccessLayer : Repository<Project>, IProject
+    public class ProjectDataAccessLayer 
     {
-        #region [Constructeur]
-        public ProjectDataAccessLayer(APIContext container) : base(container)
+        private readonly APIContext db;
+
+        public ProjectDataAccessLayer(APIContext context)
         {
-        }        
-         #endregion
+            db = context;
+        }
+
 
         public List<Project>  FindAll()
         {
-            return Container.Project.ToList();
+            return db.Project.ToList();
         }
         
         public List<Project> GetAllProject(string sort)
         {
-            var lst = Container.Project.ToList();
+            var lst = db.Project.ToList();
 
             switch (sort)
             {
@@ -44,26 +45,26 @@ namespace API.Controllers
         
         public Project FindById(int id)
         {
-            return Container.Project.Find(id);
+            return db.Project.Find(id);
         }
 
         public void Insert(Project item)
         {
-            Container.Project.Add(item);
-            Container.SaveChanges();
+            db.Project.Add(item);            
+            db.SaveChanges();
         }
 
         public void Update(Project Project)
         {
-            Container.Project.Update(Project);
-            Container.SaveChanges();
+            db.Project.Update(Project);
+            db.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            Project project = Container.Project.Find(id);
-            Container.Project.Remove(project);
-            Container.SaveChanges();
+            Project project = db.Project.Find(id);
+            db.Project.Remove(project);
+            db.SaveChanges();
         }
     }
 }

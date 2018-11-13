@@ -24,7 +24,7 @@
                 <select asp-for="Users" class="js-example-basic-multiple" name="states[]" multiple="multiple" style="width: 1138px;">
                     @foreach (var x in getlist)
                     {
-                        <option value="@x.UserId">@x.Username </option>
+                        <option value="@x.Id">@x.Username </option>
                     }
                 </select>
             </div>

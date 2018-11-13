@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace App.Models
 {
-    public class Projet : Project
+    public class Projet 
     {
+        public int Id { get; set; }
+        public string Nom { get; set; }
+        public string Description { get; set; }
+        public DateTime Date { get; set; }
         public List<Users> LstUtilisateurs { get; set; }
         public List<File>  LstFile { get; set; }
     }
