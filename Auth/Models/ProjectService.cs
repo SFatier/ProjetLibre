@@ -30,7 +30,7 @@ namespace App.Models
              
         public Projet GetById(int id)
         {
-            var resp = _client.GetAsync(uri + id).Result;
+            var resp = _client.GetAsync(uri + "/" + id).Result;
 
             if (resp.IsSuccessStatusCode)
                 return JsonConvert.DeserializeObject<Projet>(resp.Content.ReadAsStringAsync().Result);
@@ -43,16 +43,15 @@ namespace App.Models
         /// </summary>
         /// <param name="Projet"></param>
         /// <returns></returns>
-        public bool Add(Projet Projet)
+        public Projet Add(Projet Projet)
         {
-            //string send = JsonConvert.SerializeObject(Projet);
             StringContent content = new StringContent(JsonConvert.SerializeObject(Projet), System.Text.Encoding.UTF8, "application/json");
             var resp = _client.PostAsync(uri, content).Result;
 
             if (resp.IsSuccessStatusCode)
-                return true;
+                return JsonConvert.DeserializeObject<Projet>(resp.Content.ReadAsStringAsync().Result); 
             else
-                return false;
+                return null;
         }
 
         /// <summary>
@@ -86,6 +85,5 @@ namespace App.Models
             else
                 return false;
         }
-
     }
 }

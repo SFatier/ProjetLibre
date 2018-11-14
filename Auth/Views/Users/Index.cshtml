@@ -65,7 +65,7 @@
             <li class="list-group-item">
                 <p>
                     <span style="visibility:hidden">@item.Id</span>
-                    <span class="badge badge-primary">  @item.NbUsers</span> @item.Nom
+                    <span class="badge badge-primary">  @item.Users.Count()</span> @item.Nom
                     <span class="close" onclick="$('#idGroups').val(@item.Id);" data-toggle="modal" data-target="#myModal" id="ModalDeleteGroup">&times;</span>
                 </p>
             </li>

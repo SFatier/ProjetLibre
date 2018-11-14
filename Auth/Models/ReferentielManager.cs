@@ -50,7 +50,7 @@ namespace App.Models
             return _service.GetById(id);
         }
 
-        public bool AddProjet(Projet projet)
+        public Projet AddProjet(Projet projet)
         {
             return _service.Add(projet);
         }
@@ -66,9 +66,25 @@ namespace App.Models
         }
 
         /*Users*/
+        public void InsertUsersByGroupId(int idGroup, string idUser)
+        {
+           _serviceUser.InsertUsersByGroupId(idGroup,idUser);    
+        }
+
+        public void InsertUsersByProjectId(int projectId, string idUser)
+        {
+            _serviceUser.InsertUsersByProjectId(projectId, idUser);
+        }
+
         public List<Users> GetUsersByProjectId(int id)
         {
-            List<Users> users = new List<Users>();
+            List<Users> users = _serviceUser.GetUsersByProjectId(id);
+            return users;
+        }
+
+        public List<Users> GetUserByGroupId(int id)
+        {
+            List<Users> users = _serviceUser.GetUsersByGroupId(id);
             return users;
         }
 
@@ -87,7 +103,7 @@ namespace App.Models
             return _serviceUser.Add(Users);
         }
 
-        public bool DeleteUsers(int id)
+        public bool DeleteUsers(string id)
         {
             return _serviceUser.DeleteById(id);
         }
@@ -108,7 +124,7 @@ namespace App.Models
             return _serviceFile.GetById(id);
         }
 
-        public bool AddFile(File file)
+        public File AddFile(File file)
         {
             return _serviceFile.Add(file);
         }
@@ -134,7 +150,7 @@ namespace App.Models
             return _serviceGroups.GetById(id);
         }
 
-        public bool AddGroups(Groups Groups)
+        public Groups AddGroups(Groups Groups)
         {
             return _serviceGroups.Add(Groups);
         }

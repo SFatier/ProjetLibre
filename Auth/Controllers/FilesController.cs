@@ -21,11 +21,6 @@ namespace App.Controllers
         // GET: Files/Details/5
         public IActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var file = ReferentielManager.Instance.GetFileById(id);
             if (file == null)
             {
@@ -71,13 +66,8 @@ namespace App.Controllers
         }
 
         // GET: Files/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        public IActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var file = ReferentielManager.Instance.GetFileById(id);
             if (file == null)
             {
@@ -138,11 +128,6 @@ namespace App.Controllers
         // GET: Files/Delete/5
         public IActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var file = ReferentielManager.Instance.GetFileById(id);
             if (file == null)
             {

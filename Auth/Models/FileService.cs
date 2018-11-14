@@ -26,44 +26,48 @@ namespace App.Models
                 return null;
         }
 
-        internal File GetById(int id)
+        public File GetById(int id)
         {
-            throw new NotImplementedException();
+            var resp = _client.GetAsync(uri + "/" + id).Result;
+
+            if (resp.IsSuccessStatusCode)
+                return JsonConvert.DeserializeObject<File>(resp.Content.ReadAsStringAsync().Result);
+            else
+                return null;
         }
 
-        internal bool Add(File file)
+        public File Add(File file)
         {
-            throw new NotImplementedException();
+            StringContent content = new StringContent(JsonConvert.SerializeObject(file), System.Text.Encoding.UTF8, "application/json");
+            var resp = _client.PostAsync(uri, content).Result;
+
+            if (resp.IsSuccessStatusCode)
+                return JsonConvert.DeserializeObject<File>(resp.Content.ReadAsStringAsync().Result);
+            else
+                return null;
         }
 
-        internal bool DeleteById(int id)
+        public bool DeleteById(int id)
         {
-            throw new NotImplementedException();
+            var resp = _client.DeleteAsync(uri + "/" + id).Result;
+
+            if (resp.IsSuccessStatusCode)
+                return true;
+            else
+                return false;
         }
 
-        internal bool Update(File file)
+        public bool Update(File file)
         {
-            throw new NotImplementedException();
-        }
+            StringContent content = new StringContent(JsonConvert.SerializeObject(file), System.Text.Encoding.UTF8, "application/json");
 
-        File IFileService.GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
+            var resp = _client.PutAsync(uri + "/" + file.Id, content).Result;
 
-        bool IFileService.Add(File file)
-        {
-            throw new NotImplementedException();
+            if (resp.IsSuccessStatusCode)
+                return true;
+            else
+                return false;
         }
-
-        bool IFileService.DeleteById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool IFileService.Update(File file)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

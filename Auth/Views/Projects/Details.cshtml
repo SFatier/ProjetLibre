@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    var getlist = ViewBag.lstUsers as IEnumerable<App.Models.Users>;
 }
 
 <h2>Details</h2>
@@ -33,9 +34,9 @@
         </dt>
         <dd>
             <ul>
-                @foreach (var x in ViewBag.lstUsers)
+                @foreach (var x in getlist)
                 {
-                    <li>@x</li>
+                <li>@x.Username</li>
                 }
             </ul>
         </dd>

@@ -6,7 +6,7 @@ namespace App.Models
     {
         List<Groups> Get();
         Groups GetById(int id);
-        bool Add(Groups group);
+        Groups Add(Groups group);
         bool DeleteById(int id);
         bool Update(Groups group);
     }

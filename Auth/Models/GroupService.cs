@@ -12,15 +12,15 @@ namespace App.Models
         HttpClient _client = new HttpClient();
         private string uri = "https://localhost:44395/api/Group";
 
-        public bool Add(Groups group)
+        public Groups Add(Groups group)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(group), System.Text.Encoding.UTF8, "application/json");
             var resp = _client.PostAsync(uri, content).Result;
 
             if (resp.IsSuccessStatusCode)
-                return true;
+                return JsonConvert.DeserializeObject<Groups>(resp.Content.ReadAsStringAsync().Result); 
             else
-                return false;
+                return null;
         }
 
         public bool DeleteById(int id)

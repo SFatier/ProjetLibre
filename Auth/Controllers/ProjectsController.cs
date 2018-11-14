@@ -42,7 +42,11 @@ namespace App.Controllers
             if (ModelState.IsValid)
             {
                 projet.Date = DateTime.Now;
-                ReferentielManager.Instance.AddProjet(projet);
+                Projet projetResult = ReferentielManager.Instance.AddProjet(projet);
+                foreach (string item in states)
+                {
+                    ReferentielManager.Instance.InsertUsersByProjectId(projetResult.Id, item);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(projet);
@@ -52,6 +56,7 @@ namespace App.Controllers
         public IActionResult Edit(int id)
         {
             var project = ReferentielManager.Instance.GetProjetById(id);
+                
             if (project == null)
             {
                 return NotFound();

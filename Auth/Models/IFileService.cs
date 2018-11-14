@@ -2,11 +2,11 @@
 
 namespace App.Models
 {
-    internal interface IFileService
+    public interface IFileService
     {
         List<File> Get();
         File GetById(int id);
-        bool Add(File file);
+        File Add(File file);
         bool DeleteById(int id);
         bool Update(File file);
     }
