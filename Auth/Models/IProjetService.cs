@@ -6,7 +6,7 @@ namespace App.Models
     {
         List<Projet> Get();
         Projet GetById(int id);
-        bool Add(Projet projet);
+        Projet Add(Projet projet);
         bool DeleteById(int id);
         bool Update(Projet projet);
     }

@@ -19,6 +19,5 @@ namespace API
         public DbSet<File> Files { get; set; }
         public DbSet<Group> Groups { get; set; }
 
-
     }
 }

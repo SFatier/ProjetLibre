@@ -7,7 +7,11 @@ namespace App.Models
         List<Users> Get();
         Users GetById(string id);
         bool Add(Users users);
-        bool DeleteById(int id);
+        bool DeleteById(string id);
         bool Update(Users users);
+        void InsertUsersByGroupId(int idGroup, string idUser);
+        void InsertUsersByProjectId(int projectId, string idUser);
+        List<Users> GetUsersByGroupId(int id);
+        List<Users> GetUsersByProjectId(int id);
     }
 }

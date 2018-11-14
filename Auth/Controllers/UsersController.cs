@@ -14,21 +14,16 @@ namespace App.Controllers
 {
     public class UsersController : Controller
     {
-
-        private readonly APIContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
-
-        public UsersController(APIContext context, UserManager<IdentityUser> userManager)
-        {
-            _context = context;
-            _userManager = userManager;
-        }
-
         // GET: Users
         public ActionResult Index()
         {
             List<Users> lstUsers = ReferentielManager.Instance.GetAllUsers();
-            List<Groups> groups = ReferentielManager.Instance.GetAllGroups();            
+            List<Groups> groups = ReferentielManager.Instance.GetAllGroups();        
+            foreach(Groups group in groups)
+            {
+                group.Users = ReferentielManager.Instance.GetUserByGroupId(group.Id);
+            }
+
             ViewBag.Groups = groups;
             return View(lstUsers);
         }
@@ -45,9 +40,9 @@ namespace App.Controllers
         {
             return View();
         }
-        
-        //Get: Users/CreateGroup
-       public ActionResult CreateGroup()
+
+        // GET: Users/CreateGroup
+        public ActionResult CreateGroup()
         {
             ViewBag.lstUsers = ReferentielManager.Instance.GetAllUsers();
             return View();
@@ -56,18 +51,15 @@ namespace App.Controllers
         // POST: Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Username,Email,role")] Users user)
+        public IActionResult Create([Bind("Id,Username,Email,role")] Users user)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    IdentityUser identityUser = new IdentityUser { UserName = user.Username, Email = user.Email };
-                    string newPassword = GenerateRandomPassword(null);
-                    var result = await _userManager.CreateAsync(identityUser, newPassword);
-
+                    ReferentielManager.Instance.AddUser(user);
                 }
-                    return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
             catch
             {
@@ -78,20 +70,18 @@ namespace App.Controllers
         // POST: Users/CreateGroup
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateGroup([Bind("Nom,Users")] Groups groups, List<string> states)
+        public  IActionResult CreateGroup([Bind("Nom,Users")] Groups groups, List<string> states)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     API.Models.Group group = new API.Models.Group() { Nom = groups.Nom };
-                    _context.Groups.Add(group);
-                    await _context.SaveChangesAsync();
+                    Groups groupResult = ReferentielManager.Instance.AddGroups(groups);
                     
                     foreach (var item in states)
                     {
-                        _context.Users.FromSql("EXECUTE  [InsertUsersByGroupId] {0},{1} ", group.Id, item);
-                        await _context.SaveChangesAsync();
+                        ReferentielManager.Instance.InsertUsersByGroupId(groupResult.Id, item);
                     }
 
                 }
@@ -113,12 +103,11 @@ namespace App.Controllers
         // POST: Users/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("Id,Username,Email,role")]Users user)
+        public  IActionResult Edit([Bind("Id,Username,Email,role")]Users user)
         {
             try
             {
-                // TODO: Add update logic here
-                _context.Users.FromSql("EXECUTE  UpdateUser {0},{1},{2},{3} ", user.Id, user.Username, user.Email, user.role).ToList();
+                ReferentielManager.Instance.UpdateUsers(user);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -137,7 +126,7 @@ namespace App.Controllers
         // POST: Users/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(string id, IFormCollection collection)
         {
             try
             {
@@ -157,7 +146,7 @@ namespace App.Controllers
         {
             try
             {
-                _context.Users.FromSql("EXECUTE  DeleteGroup{0}", id);
+                ReferentielManager.Instance.DeleteGroups(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -166,55 +155,7 @@ namespace App.Controllers
             }
         }
 
-        #region GeneratePassword
-        public static string GenerateRandomPassword(PasswordOptions opts = null)
-        {
-            if (opts == null) opts = new PasswordOptions()
-            {
-                RequiredLength = 8,
-                RequiredUniqueChars = 4,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireNonAlphanumeric = true,
-                RequireUppercase = true
-            };
-
-            string[] randomChars = new[] {
-                    "ABCDEFGHJKLMNOPQRSTUVWXYZ",    // uppercase 
-                    "abcdefghijkmnopqrstuvwxyz",    // lowercase
-                    "0123456789",                   // digits
-                    "!@$?_-"                        // non-alphanumeric
-    };
-            Random rand = new Random(Environment.TickCount);
-            List<char> chars = new List<char>();
-
-            if (opts.RequireUppercase)
-                chars.Insert(rand.Next(0, chars.Count),
-                    randomChars[0][rand.Next(0, randomChars[0].Length)]);
-
-            if (opts.RequireLowercase)
-                chars.Insert(rand.Next(0, chars.Count),
-                    randomChars[1][rand.Next(0, randomChars[1].Length)]);
-
-            if (opts.RequireDigit)
-                chars.Insert(rand.Next(0, chars.Count),
-                    randomChars[2][rand.Next(0, randomChars[2].Length)]);
-
-            if (opts.RequireNonAlphanumeric)
-                chars.Insert(rand.Next(0, chars.Count),
-                    randomChars[3][rand.Next(0, randomChars[3].Length)]);
-
-            for (int i = chars.Count; i < opts.RequiredLength
-                || chars.Distinct().Count() < opts.RequiredUniqueChars; i++)
-            {
-                string rcs = randomChars[rand.Next(0, randomChars.Length)];
-                chars.Insert(rand.Next(0, chars.Count),
-                    rcs[rand.Next(0, rcs.Length)]);
-            }
-
-            return new string(chars.ToArray());
-        }
-        #endregion
+       
     }
 }
  

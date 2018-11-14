@@ -14,15 +14,9 @@ namespace API
     {
         UserDataAccessLayer objUser;
 
-        public UserController(APIContext context)
+        public UserController(  APIContext apicontext)
         {
-            objUser = new UserDataAccessLayer(context);
-
-            if (context.Users.Count() == 0)
-            {
-                context.Users.Add(new ApplicationUser { FirstName = "Item1", LastName="Item2" });
-                context.SaveChanges();
-            }
+           objUser = new UserDataAccessLayer( apicontext);
         }
 
         [HttpGet]
@@ -31,14 +25,8 @@ namespace API
             return objUser.GetAllUser();
         }
 
-        //[HttpGet("{sort}", Name = "GetUserSort")]
-        //public ActionResult<List<User>> Index(string sort)
-        //{
-        //    return objUser.GetAllUser(sort);
-        //}
-
         [HttpGet("{id}", Name = "GetUser")]
-        public ActionResult<IdentityUser> Details(int id)
+        public ActionResult<IdentityUser> Details(string id)
         {
             var item = objUser.GetById(id);
             if (item == null)
@@ -48,6 +36,20 @@ namespace API
             return item;
         }
 
+        [HttpGet("GetUsersByProjectId")]
+        public ActionResult<List<IdentityUser>> GetUsersByProjectId(int id)
+        {
+           List<IdentityUser> lstUsers = objUser.GetUsersByProjectId(id);
+            return lstUsers;
+        }
+
+        [HttpGet("GetUsersByGroupId")]
+        public ActionResult<List<IdentityUser>> GetUsersByGroupId(int id)
+        {
+            List<IdentityUser>  lst = objUser.GetUsersByGrouptId(id);
+            return lst;
+        }
+
         [HttpPost]
         public IActionResult Create(ApplicationUser item)
         {
@@ -55,15 +57,30 @@ namespace API
             return CreatedAtRoute("GetUser", new { id = item.Id }, item);
         }
 
-        [HttpPost]
-        public IActionResult CreateUserByGroupId(int groupId)
+        [HttpPost("InsertUsersByGroupId") ]
+        public IActionResult CreateUsersByGroupId(int groupId, string idUser)
         {
-            objUser.InsertUsersByGroupId("ee9231a7-a9fc-4f32-9ee9-2b809b719d62", groupId);
-            return NoContent();
+            bool istrue =  objUser.InsertUsersByGroupId(idUser, groupId);
+            if (!istrue)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
+        [HttpPost("InsertUsersByProjectId")]
+        public IActionResult CreateUsersByProjectId(int projectId, string idUser)
+        {
+            bool istrue = objUser.InsertUsersByProjectId(idUser, projectId);
+            if (!istrue)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
 
         [HttpPut("{id}")]
-        public IActionResult Edit(int id, ApplicationUser item)
+        public IActionResult Edit(string id, ApplicationUser item)
         {
             var User = objUser.GetById(id);
             if (User == null)
@@ -81,7 +98,7 @@ namespace API
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
             var User = objUser.GetById(id);
             if (User == null)

@@ -1,9 +1,12 @@
 ﻿using API.Models;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace App.Models
@@ -11,12 +14,6 @@ namespace App.Models
 
     public class UserService : IUserService
     {
-
-        public UserService()
-        {
-
-        }
-
         HttpClient _client = new HttpClient();
         private string uri = "https://localhost:44395/api/user";
 
@@ -61,8 +58,8 @@ namespace App.Models
         /// <returns></returns>
         public bool Add(Users user)
         {
-            //string send = JsonConvert.SerializeObject(user);
-            StringContent content = new StringContent(JsonConvert.SerializeObject(user), System.Text.Encoding.UTF8, "application/json");
+            IdentityUser identityUser = new IdentityUser { UserName = user.Username, Email = user.Email };
+            StringContent content = new StringContent(JsonConvert.SerializeObject(identityUser), System.Text.Encoding.UTF8, "application/json");
             var resp = _client.PostAsync(uri, content).Result;
 
             if (resp.IsSuccessStatusCode)
@@ -76,7 +73,7 @@ namespace App.Models
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool DeleteById(int id)
+        public bool DeleteById(string id)
         {
             var resp = _client.DeleteAsync("https://localhost:44395/api/user/" + id).Result;
 
@@ -93,9 +90,10 @@ namespace App.Models
         /// <returns></returns>
         public bool Update(Users user)
         {
-            StringContent content = new StringContent(JsonConvert.SerializeObject(user), System.Text.Encoding.UTF8, "application/json");
+            IdentityUser identityUser = new IdentityUser { UserName = user.Username, Email = user.Email };
+            StringContent content = new StringContent(JsonConvert.SerializeObject(identityUser), System.Text.Encoding.UTF8, "application/json");
 
-            var resp = _client.PutAsync(uri + "/" + user.Id, content).Result;
+            var resp = _client.PutAsync(uri + "/" + user, content).Result;
 
             if (resp.IsSuccessStatusCode)
                 return true;
@@ -110,12 +108,60 @@ namespace App.Models
         /// <returns></returns>
         public List<Users> GetUsersByProjectId(int id)
         {
-            var resp = _client.GetAsync(uri + "/GetUsersByProjectId/" + id).Result; //_context.Users.FromSql("EXECUTE  GetUsersByProjectId {0} ", id).ToList()
+            var resp = _client.GetAsync(uri + "/GetUsersByProjectId?id=" + id).Result;
 
             if (resp.IsSuccessStatusCode)
                 return JsonConvert.DeserializeObject<List<Users>>(resp.Content.ReadAsStringAsync().Result);
             else
                 return null;
         }
+
+        /// <summary>
+        /// Récupère les utilisateurs par groupe Id
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public List<Users> GetUsersByGroupId(int id)
+        {
+            var resp = _client.GetAsync(uri + "/GetUsersByGroupId?id=" + id).Result;
+
+            if (resp.IsSuccessStatusCode)
+                return JsonConvert.DeserializeObject<List<Users>>(resp.Content.ReadAsStringAsync().Result);
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Insert les utilisateurs par group Id
+        /// </summary>
+        /// <param name="idGroup"></param>
+        /// <param name="idUser"></param>
+        public void InsertUsersByGroupId(int idGroup, string idUser)
+        {
+            JObject json = new JObject(new JProperty("idGroup", idGroup), new JProperty("idUser", idUser));
+            var httpContent = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
+            string url = uri + "/InsertUsersByGroupId?groupId=" + idGroup + "&idUser=" + idUser;
+            var resp = _client.PostAsync(url, httpContent).Result;
+            if (resp.IsSuccessStatusCode)
+            {
+                //
+            }
+        }
+
+        /// <summary>
+        /// Insertion des utilisateur par projet Id
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="idUser"></param>
+        public void InsertUsersByProjectId(int projectId, string idUser) {
+
+           JObject json = new JObject(new JProperty("projectId", projectId), new JProperty("idUser", idUser));
+           var httpContent = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
+            string url = uri + "/InsertUsersByProjectId?projectId="+ projectId + "&idUser="+ idUser;
+            var resp = _client.PostAsync(url,httpContent).Result;
+            if(resp.IsSuccessStatusCode){
+                //
+            }
+         }
     }
 }
