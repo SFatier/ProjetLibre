@@ -12,6 +12,7 @@ namespace App.Models
         public string Username{ get; set; }
         public string Email{ get; set; }
         public string role{ get; set; }
+        public bool isInProject { get; set; }
     }
 
     public class Groups : Group

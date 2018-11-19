@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Details";
     var getlist = ViewBag.lstUsers as IEnumerable<App.Models.Users>;
+    var getlistFiles = ViewBag.lstFiles as IEnumerable<App.Models.File>;
 }
 
 <h2>Details</h2>
@@ -36,7 +37,18 @@
             <ul>
                 @foreach (var x in getlist)
                 {
-                <li>@x.Username</li>
+                    <li>@x.Username</li>
+                }
+            </ul>
+        </dd>
+        <dt>
+            Fichiers
+        </dt>
+        <dd>
+            <ul>
+                @foreach (var x in getlistFiles)
+                {
+                    <li>@x.Nom</li>
                 }
             </ul>
         </dd>

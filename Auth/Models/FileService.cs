@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace App.Models
@@ -68,6 +70,37 @@ namespace App.Models
             else
                 return false;
         }
-       
+
+        public List<File> GetFilesByProjectId(int id)
+        {
+            var resp = _client.GetAsync(uri + "/GetFilesByProjectId?id=" + id).Result;
+
+            if (resp.IsSuccessStatusCode)
+                return JsonConvert.DeserializeObject<List<File>>(resp.Content.ReadAsStringAsync().Result);
+            else
+                return null;
+        }
+
+        public void InsertFilesByProjectId(int projectId, int id)
+        {
+            JObject json = new JObject(new JProperty("projectId", projectId), new JProperty("idFile", id));
+            var httpContent = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
+            string url = uri + "/InsertFilesByProjectId?projectId=" + projectId + "&idFile=" + id;
+            var resp = _client.PostAsync(url, httpContent).Result;
+            if (resp.IsSuccessStatusCode)
+            {
+                //
+            }
+        }
+
+        public void DeleteFilesByProjectId(int iid, string item)
+        {
+            string url = uri + "/DeleteFilesByProjectId?projectId=" + iid + "&idUser=" + item;
+            var resp = _client.DeleteAsync(url).Result;
+            if (resp.IsSuccessStatusCode)
+            {
+                //
+            }
+        }
     }
 }

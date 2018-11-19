@@ -1,4 +1,5 @@
 ﻿using API.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,9 +66,39 @@ namespace API.Controllers
 
         public void DeleteFile(File file)
         {
-            db.Files.Remove(file);
-            db.SaveChanges();
+            try
+            {
+                db.Database.ExecuteSqlCommand("exec [DeleteFile] {0}", file.Id);
+            }
+            catch
+            {
+            }
+        }
+
+        public List<File> GetFilesByProjectId(int id)
+        {
+            try
+            {
+                var test = db.Files.FromSql("EXECUTE  GetFilesByProjectId {0} ", id).ToList();
+                return test;
+            }
+            catch
+            {
+                return new List<File>();
+            }
+        }
+
+        public bool InsertFilesByProjectId(string item, int projectId)
+        {
+            try
+            {
+                db.Database.ExecuteSqlCommand("exec [InsertFilesByProjectId] {0}, {1}", projectId, item);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
-
 }

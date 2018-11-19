@@ -163,5 +163,15 @@ namespace App.Models
                 //
             }
          }
+
+        public void DeleteUsersByProjectId(int id, string item)
+        {
+            string url = uri + "/DeleteUsersByProjectId?projectID=" + id + "&idUser=" + item;
+            var resp = _client.DeleteAsync(url).Result;
+            if (resp.IsSuccessStatusCode)
+            {
+                //
+            }
+        }
     }
 }
