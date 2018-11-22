@@ -38,6 +38,19 @@ namespace API.Migrations
                     b.ToTable("Files");
                 });
 
+            modelBuilder.Entity("API.Models.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Nom");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Groups");
+                });
+
             modelBuilder.Entity("API.Models.Project", b =>
                 {
                     b.Property<int>("Id")
