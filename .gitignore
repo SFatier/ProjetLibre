@@ -1,0 +1,8 @@
+
+Auth/obj/*
+Auth/bin/*
+
+API/obj/*
+API/bin/*
+
+.vs/*
