@@ -9,5 +9,8 @@ namespace App.Models
         File Add(File file);
         bool DeleteById(int id);
         bool Update(File file);
+        List<File> GetFilesByProjectId(int id);
+        void InsertFilesByProjectId( int projetId, int id);
+        void DeleteFilesByProjectId(int iid, string item);
     }
 }

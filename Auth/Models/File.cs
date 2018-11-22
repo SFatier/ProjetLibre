@@ -7,6 +7,7 @@ namespace App.Models
 {
     public class File
     {
+        public bool isInProject;
         public int Id { get; set; }
         public string Nom { get; set; }
         public string Path { get; set; }

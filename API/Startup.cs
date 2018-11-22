@@ -24,7 +24,7 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<APIContext>(opt => opt.UseSqlServer("Data Source=SIGT-GAT\\SQLEXPRESS2014;Initial Catalog=API;Persist Security Info=True;User ID=sa;Password=sigt,123"));
+            services.AddDbContext<APIContext>(opt => opt.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=API;Integrated Security=True"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

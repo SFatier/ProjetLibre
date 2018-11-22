@@ -112,8 +112,20 @@ namespace App.Models
         {
             return _serviceUser.Update(Users);
         }
-        
+
         /*File*/
+
+        public List<File> GetFilesByProjectId(int id)
+        {
+            List<File> files = _serviceFile.GetFilesByProjectId(id);
+            return files;
+        }
+
+        public void InsertFilesByProjectId(int projetId, int id)
+        {
+            _serviceFile.InsertFilesByProjectId(projetId, id);            
+        }
+
         public List<File> GetAllFile()
         {
             return _serviceFile.Get();
@@ -163,6 +175,16 @@ namespace App.Models
         public bool UpdateGroups(Groups Groups)
         {
             return _serviceGroups.Update(Groups);
+        }
+
+        public  void DeleteUsersByProjectId(int id, string item)
+        {
+            _serviceUser.DeleteUsersByProjectId(id, item);
+        }
+
+        public void DeleteFilesByProjectId(int id, string item)
+        {
+            _serviceFile.DeleteFilesByProjectId(id, item);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using API.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -78,8 +77,13 @@ namespace API.Controllers
 
         public void DeleteUser(IdentityUser User)
         {
-            _context.Users.Remove(User);
-            _context.SaveChanges();
+            try
+            {
+                _context.Database.ExecuteSqlCommand("exec [DeleteUser] {0}", User.Id);
+            }
+            catch
+            {
+            }
         }
 
         public bool InsertUsersByProjectId(string idUser, int projectId)
@@ -87,6 +91,32 @@ namespace API.Controllers
             try
             {
                 _context.Database.ExecuteSqlCommand("exec [InsertUsersByProjectId] {0}, {1}", projectId, idUser);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool DeleteFilesByProjectId(string idUser, int projectId)
+        {
+            try
+            {
+                _context.Database.ExecuteSqlCommand("exec [DeleteFilesByProjectId] {0}, {1}", projectId, idUser);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool DeleteUsersByProjectId(string idUser, int projectId)
+        {
+            try
+            {
+                _context.Database.ExecuteSqlCommand("exec [DeleteUsersByProjectId] {0}, {1}", projectId, idUser);
                 return true;
             }
             catch
@@ -143,6 +173,8 @@ namespace API.Controllers
 
             return new string(chars.ToArray());
         }
+
+    
         #endregion
     }
 }

@@ -110,5 +110,26 @@ namespace API
             return NoContent();
         }
 
+        [HttpDelete("DeleteUsersByProjectId")]
+        public IActionResult DeleteUsersByProjectId(int projectId, string idUser)
+        {
+            bool istrue = objUser.DeleteUsersByProjectId(idUser, projectId);
+            if (!istrue)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
+        [HttpDelete("DeleteFilesByProjectId")]
+        public IActionResult DeleteFilesByProjectId(int projectId, string idUser)
+        {
+            bool istrue = objUser.DeleteFilesByProjectId(idUser, projectId);
+            if (!istrue)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
     }
 }

@@ -13,5 +13,6 @@ namespace App.Models
         void InsertUsersByProjectId(int projectId, string idUser);
         List<Users> GetUsersByGroupId(int id);
         List<Users> GetUsersByProjectId(int id);
+        void DeleteUsersByProjectId(int id, string item);
     }
 }

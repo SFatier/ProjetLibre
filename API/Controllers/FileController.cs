@@ -80,5 +80,23 @@ namespace API.Controllers
             objFile.DeleteFile(File);
             return NoContent();
         }
+
+        [HttpGet("GetFilesByProjectId")]
+        public ActionResult<List<File>> GetFilesByProjectId(int id)
+        {
+            List<File> lst = objFile.GetFilesByProjectId(id);
+            return lst;
+        }
+
+        [HttpPost("InsertFilesByProjectId")]
+        public IActionResult CreateFilesByProjectId(int projectId, string idFile)
+        {
+            bool istrue = objFile.InsertFilesByProjectId(idFile, projectId);
+            if (!istrue)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
     }
 }

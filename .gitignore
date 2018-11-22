@@ -1,0 +1,9 @@
+
+Auth/obj/*
+Auth/bin/*
+
+API/obj/*
+API/bin/*
+
+.vs/*
+Auth/Views/Shared/_Layout_old.cshtml
