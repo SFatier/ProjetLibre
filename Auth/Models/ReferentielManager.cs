@@ -42,12 +42,15 @@ namespace App.Models
         /*Projet*/
         public List<Projet> GetAllProjet()
         {
-            return _service.Get();
+            List<Projet> lst = _service.Get();
+            if (lst == null)
+                lst =  new List<Projet>();
+            return lst;
         }
 
         public Projet GetProjetById(int id)
         {
-            return _service.GetById(id);
+             return _service.GetById(id);     
         }
 
         public Projet AddProjet(Projet projet)
@@ -90,7 +93,10 @@ namespace App.Models
 
         public List<Users> GetAllUsers()
         {
-            return _serviceUser.Get();
+            List < Users > lst = _serviceUser.Get();
+           if (lst == null)
+                lst  = new List<Users>();
+            return lst;
         }
 
         public Users GetUsersById(string id)
@@ -128,7 +134,10 @@ namespace App.Models
 
         public List<File> GetAllFile()
         {
-            return _serviceFile.Get();
+            List < File > lst =   _serviceFile.Get();
+            if (lst == null)
+                lst = new List<File>();
+            return lst;
         }
                
         public File GetFileById(int id)
@@ -154,7 +163,14 @@ namespace App.Models
         /*Group*/
         public List<Groups> GetAllGroups()
         {
-            return _serviceGroups.Get();
+            try
+            {
+                return _serviceGroups.Get();
+            }
+            catch
+            {
+                return new List<Groups>();
+            }
         }
 
         public Groups GetGroupsById(int id)

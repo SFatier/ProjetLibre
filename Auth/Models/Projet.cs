@@ -14,5 +14,6 @@ namespace App.Models
         public DateTime Date { get; set; }
         public List<Users> LstUtilisateurs { get; set; }
         public List<File>  LstFile { get; set; }
+        public string Progress { get; set; }
     }
 }

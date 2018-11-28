@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Auth.Models;
+using App.Models;
 
 namespace Auth.Controllers
 {
@@ -12,6 +13,12 @@ namespace Auth.Controllers
     {
         public IActionResult Index()
         {
+            ViewBag.Projet = 10;
+            ViewBag.Fichier = 10;
+            Projet projet = new Projet() { Id = 1, Description = "test", Date = DateTime.Now, Nom = "Net5", Progress = "23%" };
+            List<Projet> lst = new List<Projet>();
+            lst.Add(projet);
+            ViewBag.getListProgressProject = lst;
             return View();
         }
 
