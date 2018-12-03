@@ -7,3 +7,8 @@ API/bin/*
 
 .vs/*
 Auth/Views/Shared/_Layout_old.cshtml
+
+API/Migrations/*
+
+API/Startup.cs
+Auth/Startup.cs
