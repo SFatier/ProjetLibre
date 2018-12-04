@@ -13,7 +13,14 @@ namespace App.Controllers
         public  IActionResult Index()
         {
            List<Projet> lstproject = ReferentielManager.Instance.GetAllProjet();
+            ViewData["lstproject"] = lstproject;
             return View(lstproject);
+        }
+
+        public PartialViewResult ShowGridOrTab()
+        {
+            List<Projet> lstproject = ReferentielManager.Instance.GetAllProjet();
+            return PartialView("_GridProjects", lstproject);
         }
 
         // GET: Projects/Details/5

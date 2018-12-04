@@ -18,7 +18,7 @@ namespace Auth.Controllers
             Projet projet = new Projet() { Id = 1, Description = "test", Date = DateTime.Now, Nom = "Net5", Progress = "23%" };
             List<Projet> lst = new List<Projet>();
             lst.Add(projet);
-            ViewBag.getListProgressProject = lst;
+            ViewData["LstProjects"] = lst;
             return View();
         }
 
