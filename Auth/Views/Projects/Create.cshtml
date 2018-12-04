@@ -42,7 +42,7 @@
                                     <label class="form-check-label" for="gridCheck" style="float:right; margin-right:5px;">
                                         Select All
                                     </label>
-                                    <select asp-for="LstUtilisateurs" class="select-users form-control" name="states[]" multiple="multiple">
+                                    <select class="select-users form-control" name="states[]" multiple="multiple">
                                         @foreach (var x in getlist)
                                         {
                                             <option value="@x.Id">@x.Username </option>
@@ -90,9 +90,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
     <script>
-        /*Declaration des select2*/
-        $('.select-users').select2();
-        $('.select-files').select2();
+        $(document).ready(function () {
+            /*Declaration des select2*/
+            $('.select-users').select2();
+            $('.select-files').select2();
+        });
+        
 
         /*Select/unselect team*/
         $("#checkbox_users").click(function () {
@@ -147,4 +150,5 @@
 
 
     </script>
+
 }

@@ -13,5 +13,9 @@ namespace App.Models
         public string Path { get; set; }
         public string Type { get; set; }
         public DateTime DateCreation{ get; set; }
+  
+        public string ImageCaption { set; get; }
+        public string ImageDescription { set; get; }
+        public Microsoft.AspNetCore.Http.IFormFile MyImage { set; get; }
     }
 }

@@ -4,9 +4,11 @@
     ViewData["Title"] = "Index";
 }
 
+
 <div class="main">
     <!-- MAIN CONTENT -->
     <div class="main-content">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
         <div class="container-fluid">
             <!-- OVERVIEW -->
             <div class="panel panel-headline">
@@ -15,47 +17,23 @@
                     <p>
                         <a asp-action="Create">Nouveau projet</a>
                     </p>
+                    <div role="group" id="btnGroup" class="mr-auto mr-md-2 btn-group">
+                        <a class="align-self-center btn btn-secondary">
+                            <i class="fa-fw fa fa-bars"></i>
+                        </a>
+                        <a class="align-self-center btn btn-secondary active" aria-current="page">
+                            <i class="fa-fw fa fa-th-large"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="panel-body">
-                    <div class="row">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Nom)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Description)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Date)
-                                    </th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Nom)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Description)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Date)
-                                        </td>
-                                        <td>
-                                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                    <div class="partial">
+                        @Html.Partial("_GridProjects.cshtml", Model)
                     </div>
+                    @*<div>
+                            @Html.Partial("_TabProjects.cshtml", Model)
+
+                        </div>*@
                 </div>
             </div>
             <!-- END OVERVIEW -->
@@ -65,5 +43,23 @@
 </div>
 
 
+@section Scripts{
+    <script>
+        $("#btnGroup".on("click", function () {
 
+            var selection = $("#btnGroup").val();
+            var link = '@Url.Action("ShowGridOrTab", "Project") ';
+            link = link+ "?value =" + data
+            $.ajax({
+                url: '@Url.Action("ShowGridOrTab", "Project") ' + " + " ? value =" + data
+                type: 'POST',
+                    success: function (data) {
+                        console.log(data);
+                    //$("#shoppingcatalog").html(data);
+                }
+            });
+        });
+
+    </script>
+}
 

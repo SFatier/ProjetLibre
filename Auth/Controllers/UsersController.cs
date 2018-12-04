@@ -41,6 +41,16 @@ namespace App.Controllers
             return View();
         }
 
+        //GET: Users/Profile
+        public ActionResult Profile(string id)
+        {
+            ViewBag.Projects = ReferentielManager.Instance.GetAllProjet();
+            ViewBag.nbFiles = ReferentielManager.Instance.GetAllFile().Count();
+            ViewBag.NbProjects = ReferentielManager.Instance.GetAllProjet().Count();
+            Users user = ReferentielManager.Instance.GetUsersById(id);
+            return View(user);
+        }
+
         // GET: Users/CreateGroup
         public ActionResult CreateGroup()
         {

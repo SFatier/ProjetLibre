@@ -6,11 +6,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
 namespace App.Controllers
 {
     public class FilesController : Controller
     {
+
+        public IConfiguration Configuration { get; set; }
+
+        public FilesController(IConfiguration config)
+        {
+            Configuration = config;
+        }
+
         // GET: Files
         public IActionResult Index()
         {
@@ -53,12 +63,18 @@ namespace App.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Nom,Path,Type")] File file)
+        public async Task<IActionResult> Create([Bind("Id,Nom, MyImage")] File file)
         {
             if (ModelState.IsValid)
             {
+                file.Path = Configuration["folderTmp"] + file.MyImage.FileName;
+
+                using (var stream = new System.IO.FileStream(file.Path, System.IO.FileMode.Create))
+                {
+                    await file.MyImage.CopyToAsync(stream);
+                }
                 file.DateCreation = DateTime.Now;
-                file.Type = System.IO.Path.GetDirectoryName(file.Path);
+                file.Type = System.IO.Path.GetExtension(file.Path) ;
                 ReferentielManager.Instance.AddFile(file);
                 return RedirectToAction(nameof(Index));
             }
@@ -75,12 +91,12 @@ namespace App.Controllers
             }
 
             #region [Affichage du pdf]
-            string filedb =  "C:\\Users\\sigt_sf\\Documents\\GitHub\\ProjetLibre\\Auth\\wwwroot\\file\\pdf_edit.pdf";
+            string filedb = Configuration["folderPDF"];
 
-            if (System.IO.File.Exists(filedb))
-            {
-                    System.IO.File.Delete(filedb);
-            }
+            //if (System.IO.File.Exists(filedb))
+            //{
+            //        System.IO.File.Delete(filedb);
+            //}
 
             if (file.Type == "pdf")
                 SaveFileInFolder(filedb, System.IO.File.ReadAllBytes(file.Path));

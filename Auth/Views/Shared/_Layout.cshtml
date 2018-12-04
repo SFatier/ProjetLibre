@@ -13,6 +13,7 @@
     <!-- VENDOR CSS -->
     <link rel="stylesheet" href="~/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/vendor/font-awesome/css/font-awesome.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/vendor/linearicons/style.css">
     <link rel="stylesheet" href="~/vendor/chartist/css/chartist-custom.css">
     <!-- MAIN CSS -->
@@ -55,15 +56,15 @@
             <div class="sidebar-scroll">
                 <nav>
                     <ul class="nav">
-                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="lnr lnr-home"></i>Home</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="About"><i class="lnr lnr-pushpin"></i>About</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Contact"><i class="lnr lnr-phone-handset"></i>Contact</a></li>
                         <!--Afficje les menus si on est connecté-->
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            <li><a asp-area="" asp-controller="Projects" asp-action="Index">Project</a></li>
-                            <li><a asp-area="" asp-controller="Files" asp-action="Index">Files</a></li>
-                            <li><a asp-area="" asp-controller="Users" asp-action="Index">Utilisateurs</a></li>
+                            <li><a asp-area="" asp-controller="Projects" asp-action="Index"><i class="lnr lnr-briefcase"></i>Project</a></li>
+                            <li><a asp-area="" asp-controller="Files" asp-action="Index"><i class="lnr lnr-paperclip"></i>Files</a></li>
+                            <li><a asp-area="" asp-controller="Users" asp-action="Index"><i class="lnr lnr-users"></i>Utilisateurs</a></li>
                         }
                     </ul>
                 </nav>
@@ -73,11 +74,11 @@
         <!-- MAIN -->
         <partial name="_CookieConsentPartial" />
 
-            @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; 2018 - Projet NET</p>
-            </footer>
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2018 - Projet NET</p>
+        </footer>
     </div>
     <!-- END WRAPPER -->
     <!-- Javascript -->
@@ -87,7 +88,7 @@
     <script src="~/vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js"></script>
     <script src="~/vendor/chartist/js/chartist.min.js"></script>
     <script src="~/scripts/klorofil-common.js"></script>
-  
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>
