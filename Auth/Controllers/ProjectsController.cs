@@ -41,7 +41,7 @@ namespace App.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Nom,Description")] Projet projet, List<string> states, List<int> files)
+        public IActionResult Create([Bind("Id,Nom,Description")] Projet projet, List<string> states, List<int> files, List<Task> task)
         {
             if (ModelState.IsValid)
             {

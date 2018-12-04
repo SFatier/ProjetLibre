@@ -89,7 +89,7 @@ namespace API.Controllers
         }
 
         [HttpPost("InsertFilesByProjectId")]
-        public IActionResult CreateFilesByProjectId(int projectId, string idFile)
+        public IActionResult CreateFilesByProjectId(int projectId, int idFile)
         {
             bool istrue = objFile.InsertFilesByProjectId(idFile, projectId);
             if (!istrue)
