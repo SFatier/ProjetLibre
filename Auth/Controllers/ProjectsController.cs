@@ -16,13 +16,7 @@ namespace App.Controllers
             ViewData["lstproject"] = lstproject;
             return View(lstproject);
         }
-
-        public PartialViewResult ShowGridOrTab()
-        {
-            List<Projet> lstproject = ReferentielManager.Instance.GetAllProjet();
-            return PartialView("_GridProjects", lstproject);
-        }
-
+                
         // GET: Projects/Details/5
         public IActionResult Details(int id)
         {
@@ -53,6 +47,7 @@ namespace App.Controllers
             if (ModelState.IsValid)
             {
                 projet.Date = DateTime.Now;
+                projet.Progress = "0%";
                 Projet projetResult = ReferentielManager.Instance.AddProjet(projet);
                
                 //recupertion des utilisateurs

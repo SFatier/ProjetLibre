@@ -43,6 +43,13 @@ namespace App.Models
         public List<Projet> GetAllProjet()
         {
             List<Projet> lst = _service.Get();
+
+            lst.ForEach(projet =>
+            {
+                projet.LstFile = GetFilesByProjectId(projet.Id);
+                projet.LstUtilisateurs = GetUsersByProjectId(projet.Id);
+            });
+
             if (lst == null)
                 lst =  new List<Projet>();
             return lst;

@@ -17,23 +17,25 @@
                     <p>
                         <a asp-action="Create">Nouveau projet</a>
                     </p>
-                    <div role="group" id="btnGroup" class="mr-auto mr-md-2 btn-group">
-                        <a class="align-self-center btn btn-secondary">
-                            <i class="fa-fw fa fa-bars"></i>
-                        </a>
-                        <a class="align-self-center btn btn-secondary active" aria-current="page">
-                            <i class="fa-fw fa fa-th-large"></i>
-                        </a>
-                    </div>
+                    <div id="my-btns" class="btn-group " data-toggle="buttons">
+                    <label class="btn btn-default ">
+                        <i class="fa fa-list"></i>
+                        <input type="radio" autocomplete="off" checked value="list">
+                    </label>
+                    <label class="btn btn-default active">
+                        <i class="fa fa-th"></i>
+                        <input type="radio" autocomplete="off" value="grid">
+                    </label>
                 </div>
+                </div>
+                
                 <div class="panel-body">
-                    <div class="partial">
+                    <div class="partial_grid">
                         @Html.Partial("_GridProjects.cshtml", Model)
                     </div>
-                    @*<div>
-                            @Html.Partial("_TabProjects.cshtml", Model)
-
-                        </div>*@
+                   <div class="partial_list">
+                        @Html.Partial("_TabProjects.cshtml", Model)
+                    </div>
                 </div>
             </div>
             <!-- END OVERVIEW -->
@@ -45,19 +47,20 @@
 
 @section Scripts{
     <script>
-        $("#btnGroup".on("click", function () {
+        $(document).ready(function () {
+            $('.partial_list').hide();
+        });
 
-            var selection = $("#btnGroup").val();
-            var link = '@Url.Action("ShowGridOrTab", "Project") ';
-            link = link+ "?value =" + data
-            $.ajax({
-                url: '@Url.Action("ShowGridOrTab", "Project") ' + " + " ? value =" + data
-                type: 'POST',
-                    success: function (data) {
-                        console.log(data);
-                    //$("#shoppingcatalog").html(data);
-                }
-            });
+        $('#my-btns .btn').on('click', function (event) {
+            //console.log($(this).find('input').val());
+            var val = $(this).find('input').val();
+            if (val == "grid") {
+                $('.partial_grid').show();
+                $('.partial_list').hide();
+            } else {
+                $('.partial_grid').hide();
+                $('.partial_list').show();
+            }
         });
 
     </script>
