@@ -12,3 +12,4 @@ API/Migrations/*
 
 API/Startup.cs
 Auth/Startup.cs
+API/Startup.cs

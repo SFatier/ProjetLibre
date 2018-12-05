@@ -13,6 +13,19 @@ namespace Auth.Controllers
     {
         public IActionResult Index()
         {
+/*
+            List<Projet> lstProjet = ReferentielManager.Instance.GetAllProjet();
+            List<File> lstFile = ReferentielManager.Instance.GetAllFile();
+
+            if (lstProjet == null)
+                lstProjet = new List<Projet>();
+
+            ViewBag.Projet = lstProjet.Count();
+            ViewBag.Fichier = (lstFile == null ? 0 : lstFile.Count());
+
+            ViewBag.getListProgressProject = lstProjet;
+
+*/
             ViewBag.Projet = 10;
             ViewBag.Fichier = 10;
             Projet projet = new Projet() { Id = 1, Description = "test", Date = DateTime.Now, Nom = "Net5", Progress = "23%" };
