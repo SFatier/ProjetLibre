@@ -11,6 +11,7 @@ namespace App.Models
         private  IUserService _serviceUser;
         private  IFileService _serviceFile;
         private IGroupeService _serviceGroups;
+        private ITask _serviceTask;
 
         #region [ Singleton ]
 
@@ -37,6 +38,7 @@ namespace App.Models
             _serviceUser = new UserService();
             _serviceFile = new FileService();
             _serviceGroups = new GroupService();
+            _serviceTask = new TaskService();
         }
         
         /*Projet*/
@@ -208,6 +210,26 @@ namespace App.Models
         public void DeleteFilesByProjectId(int id, string item)
         {
             _serviceFile.DeleteFilesByProjectId(id, item);
+        }
+
+
+        /*Tâche*/
+
+        public List<Task> GetTaskByProjectId(int id)
+        {
+            List<Task> Task = _serviceTask.GetTaskByProjectId(id);
+            return Task;
+        }
+
+
+        public Task AddTask(Task task)
+        {
+            return _serviceTask.Add(task);
+        }
+
+        public void InsertTaskByProjectId(int projetId, int id)
+        {
+            _serviceTask. InsertTaskByProjectId(projetId, id);
         }
     }
 }

@@ -41,11 +41,14 @@ namespace App.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Nom,Description")] Projet projet, List<string> states, List<int> files, List<Task> task)
+        public IActionResult Create( string Nom, string Description, List<string> states, List<int> files, List<Task> task)
         {
+            Projet projet = new Projet();
+
             if (ModelState.IsValid)
             {
+                projet.Nom = Nom;
+                projet.Description = Description;
                 projet.Date = DateTime.Now;
                 projet.Progress = "0%";
                 Projet projetResult = ReferentielManager.Instance.AddProjet(projet);
@@ -60,6 +63,12 @@ namespace App.Controllers
                 foreach (int item in files)
                 {
                     ReferentielManager.Instance.InsertFilesByProjectId(  projetResult.Id, item);
+                }
+
+                foreach(Task item in task)
+                {
+                    Task result = ReferentielManager.Instance.AddTask(item);
+                    ReferentielManager.Instance.InsertTaskByProjectId(projetResult.Id, result.Id);
                 }
 
                 return RedirectToAction(nameof(Index));
