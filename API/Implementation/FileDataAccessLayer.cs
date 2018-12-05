@@ -88,7 +88,7 @@ namespace API.Controllers
             }
         }
 
-        public bool InsertFilesByProjectId(string item, int projectId)
+        public bool InsertFilesByProjectId(int item, int projectId)
         {
             try
             {

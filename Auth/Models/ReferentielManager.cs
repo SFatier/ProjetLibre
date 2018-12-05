@@ -11,6 +11,7 @@ namespace App.Models
         private  IUserService _serviceUser;
         private  IFileService _serviceFile;
         private IGroupeService _serviceGroups;
+        private ITask _serviceTask;
 
         #region [ Singleton ]
 
@@ -37,17 +38,28 @@ namespace App.Models
             _serviceUser = new UserService();
             _serviceFile = new FileService();
             _serviceGroups = new GroupService();
+            _serviceTask = new TaskService();
         }
         
         /*Projet*/
         public List<Projet> GetAllProjet()
         {
-            return _service.Get();
+            List<Projet> lst = _service.Get();
+
+            lst.ForEach(projet =>
+            {
+                projet.LstFile = GetFilesByProjectId(projet.Id);
+                projet.LstUtilisateurs = GetUsersByProjectId(projet.Id);
+            });
+
+            if (lst == null)
+                lst =  new List<Projet>();
+            return lst;
         }
 
         public Projet GetProjetById(int id)
         {
-            return _service.GetById(id);
+             return _service.GetById(id);     
         }
 
         public Projet AddProjet(Projet projet)
@@ -90,7 +102,10 @@ namespace App.Models
 
         public List<Users> GetAllUsers()
         {
-            return _serviceUser.Get();
+            List < Users > lst = _serviceUser.Get();
+           if (lst == null)
+                lst  = new List<Users>();
+            return lst;
         }
 
         public Users GetUsersById(string id)
@@ -128,7 +143,10 @@ namespace App.Models
 
         public List<File> GetAllFile()
         {
-            return _serviceFile.Get();
+            List < File > lst =   _serviceFile.Get();
+            if (lst == null)
+                lst = new List<File>();
+            return lst;
         }
                
         public File GetFileById(int id)
@@ -154,7 +172,14 @@ namespace App.Models
         /*Group*/
         public List<Groups> GetAllGroups()
         {
-            return _serviceGroups.Get();
+            try
+            {
+                return _serviceGroups.Get();
+            }
+            catch
+            {
+                return new List<Groups>();
+            }
         }
 
         public Groups GetGroupsById(int id)
@@ -185,6 +210,26 @@ namespace App.Models
         public void DeleteFilesByProjectId(int id, string item)
         {
             _serviceFile.DeleteFilesByProjectId(id, item);
+        }
+
+
+        /*Tâche*/
+
+        public List<Task> GetTaskByProjectId(int id)
+        {
+            List<Task> Task = _serviceTask.GetTaskByProjectId(id);
+            return Task;
+        }
+
+
+        public Task AddTask(Task task)
+        {
+            return _serviceTask.Add(task);
+        }
+
+        public void InsertTaskByProjectId(int projetId, int id)
+        {
+            _serviceTask. InsertTaskByProjectId(projetId, id);
         }
     }
 }
