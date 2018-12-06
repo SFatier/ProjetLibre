@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using API.Models;
-using App.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

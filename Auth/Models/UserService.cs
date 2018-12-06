@@ -1,4 +1,5 @@
-﻿using API.Models;
+﻿using API;
+using API.Models;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -58,8 +59,8 @@ namespace App.Models
         /// <returns></returns>
         public bool Add(Users user)
         {
-            IdentityUser identityUser = new IdentityUser { UserName = user.Username, Email = user.Email };
-            StringContent content = new StringContent(JsonConvert.SerializeObject(identityUser), System.Text.Encoding.UTF8, "application/json");
+           
+            StringContent content = new StringContent(JsonConvert.SerializeObject(user), System.Text.Encoding.UTF8, "application/json");
             var resp = _client.PostAsync(uri, content).Result;
 
             if (resp.IsSuccessStatusCode)
@@ -90,8 +91,8 @@ namespace App.Models
         /// <returns></returns>
         public bool Update(Users user)
         {
-            IdentityUser identityUser = new IdentityUser { UserName = user.Username, Email = user.Email };
-            StringContent content = new StringContent(JsonConvert.SerializeObject(identityUser), System.Text.Encoding.UTF8, "application/json");
+            //IdentityUser identityUser = new IdentityUser { UserName = user.Username, Email = user.Email };
+            StringContent content = new StringContent(JsonConvert.SerializeObject(user), System.Text.Encoding.UTF8, "application/json");
 
             var resp = _client.PutAsync(uri + "/" + user, content).Result;
 

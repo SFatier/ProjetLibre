@@ -2,7 +2,7 @@ Go
 CREATE TABLE [Groups]
 (
 	Id INT PRIMARY KEY NOT NULL,
-	Nom int
+	Nom varchar(50)
 )
 
 
