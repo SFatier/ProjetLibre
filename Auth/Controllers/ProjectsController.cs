@@ -23,9 +23,11 @@ namespace App.Controllers
             var project = ReferentielManager.Instance.GetProjetById(id);
             var users = ReferentielManager.Instance.GetUsersByProjectId(id);
             var files = ReferentielManager.Instance.GetFilesByProjectId(id);
+            var tasks = ReferentielManager.Instance.GetTaskByProjectId(id);
 
             ViewBag.lstUsers = users;
             ViewBag.lstFiles = files;
+            ViewData["lstTasks"] = tasks;
             return View(project);
         }
 
@@ -70,10 +72,8 @@ namespace App.Controllers
                     Task result = ReferentielManager.Instance.AddTask(item);
                     ReferentielManager.Instance.InsertTaskByProjectId(projetResult.Id, result.Id);
                 }
-
-                return RedirectToAction(nameof(Index));
             }
-            return View(projet);
+            return RedirectToAction("Index", "Project");
         }
 
         // GET: Projects/Edit/5

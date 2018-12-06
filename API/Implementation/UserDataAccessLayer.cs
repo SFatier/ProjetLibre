@@ -25,16 +25,17 @@ namespace API.Controllers
             return _context.Users.First(x => x.Id.Equals(id));
         }
 
-        public void InsertUser(ApplicationUser item)
+        public void InsertUser(IdentityUser item)
         {
             string newPassword = GenerateRandomPassword(null);
             _context.Users.Add(item);
-            _context.SaveChanges();  
+            _context.SaveChanges();
         }
 
-        public void UpdateUser(ApplicationUser User)
+        public void UpdateUser(IdentityUser User)
         {
             _context.Users.Update(User);
+            _context.SaveChanges();
         }
 
         public bool InsertUsersByGroupId(string item, int groupId)

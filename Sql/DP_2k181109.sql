@@ -1,8 +1,8 @@
 Go
 CREATE TABLE [Groups]
 (
-	Id INT PRIMARY KEY NOT NULL,
-	Nom int
+	Id INT NOT NULL IDENTITY(12485, 1) PRIMARY KEY,
+	Nom varchar(50)
 )
 
 

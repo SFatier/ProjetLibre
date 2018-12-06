@@ -51,8 +51,9 @@ namespace API
         }
 
         [HttpPost]
-        public IActionResult Create(ApplicationUser item)
+        public IActionResult Create(string username, string email)
         {
+            ApplicationUser item = new ApplicationUser() { UserName = username, Email = email };
             objUser.InsertUser(item);
             return CreatedAtRoute("GetUser", new { id = item.Id }, item);
         }
@@ -79,8 +80,8 @@ namespace API
             return Ok();
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Edit(string id, ApplicationUser item)
+        [HttpPost ("EditUser")]
+        public IActionResult Edit(string id, string username, string email)
         {
             var User = objUser.GetById(id);
             if (User == null)
@@ -88,12 +89,11 @@ namespace API
                 return NotFound();
             }
 
-            //User.LastName = item.LastName;
-           // User.FirstName = item.FirstName;
-            User.Email = item.Email;
-            User.PasswordHash = item.PasswordHash;
+            User.UserName = username;
+            User.Email = email;
+            //User.PasswordHash = item.PasswordHash;
 
-            objUser.UpdateUser(item);
+            objUser.UpdateUser(User);
             return NoContent();
         }
 

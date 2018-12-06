@@ -29,31 +29,34 @@
                         @Html.DisplayFor(modelItem => item.Description)
                     </td>
                     <td>
-                        @if (Convert.ToInt32(@item.Progress.Split('%')[0]) <= Convert.ToInt32("50"))
+                        @if (@item.Progress != null)
                         {
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-danger " role="progressbar" aria-valuenow="@item.Progress.Split('%')[0]" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress">
-                                    <span class="sr-only">@Html.DisplayFor(modelItem => item.Progress) Complete (warning)</span>
+                            @if (Convert.ToInt32(@item.Progress.Split('%')[0]) <= Convert.ToInt32("50"))
+                            {
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-danger " role="progressbar" aria-valuenow="@item.Progress.Split('%')[0]" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress">
+                                        <span class="sr-only">@Html.DisplayFor(modelItem => item.Progress) Complete (warning)</span>
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                        else if (Convert.ToInt32(@item.Progress.Split('%')[0]) <= Convert.ToInt32("90"))
-                        {
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-warning " role="progressbar" aria-valuenow="@item.Progress.Split('%')[0]" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress">
-                                    <span class="sr-only">@Html.DisplayFor(modelItem => item.Progress) Complete (warning)</span>
+                            }
+                            else if (Convert.ToInt32(@item.Progress.Split('%')[0]) <= Convert.ToInt32("90"))
+                            {
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-warning " role="progressbar" aria-valuenow="@item.Progress.Split('%')[0]" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress">
+                                        <span class="sr-only">@Html.DisplayFor(modelItem => item.Progress) Complete (warning)</span>
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-success " role="progressbar" aria-valuenow="@item.Progress.Split('%')[0]" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress">
-                                    <span class="sr-only">@Html.DisplayFor(modelItem => item.Progress) Complete (warning)</span>
+                            }
+                            else
+                            {
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-success " role="progressbar" aria-valuenow="@item.Progress.Split('%')[0]" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress">
+                                        <span class="sr-only">@Html.DisplayFor(modelItem => item.Progress) Complete (warning)</span>
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         }
-                    </td>
+                        </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

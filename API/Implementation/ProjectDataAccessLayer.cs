@@ -1,4 +1,5 @@
 ﻿using API.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,9 +63,17 @@ namespace API.Controllers
 
         public void Delete(int id)
         {
-            Project project = db.Project.Find(id);
-            db.Project.Remove(project);
-            db.SaveChanges();
+            // Project project = db.Project.Find(id);
+            //db.Project.Remove(project);
+            //db.SaveChanges();
+            try
+            {
+                db.Database.ExecuteSqlCommand("exec [DeleteProject] {0}", id);
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }
