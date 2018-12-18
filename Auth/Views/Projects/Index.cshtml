@@ -46,9 +46,18 @@
 
 
 @section Scripts{
-    <script>
+<script>
         $(document).ready(function () {
             $('.partial_list').hide();
+            $('.partial_grid').hide();
+
+            if ( @ViewBag.test == 2){
+                $('.partial_grid').show();
+                $('.partial_list').hide();
+            } else {
+                $('.partial_grid').hide();
+                $('.partial_list').show();
+            }
         });
 
         $('#my-btns .btn').on('click', function (event) {
@@ -63,6 +72,6 @@
             }
         });
 
-    </script>
+</script>
 }
 

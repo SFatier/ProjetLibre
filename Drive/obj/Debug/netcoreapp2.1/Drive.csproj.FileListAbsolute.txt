@@ -1,0 +1,11 @@
+C:\Users\sigt_sf\Documents\GitHub\ProjetLibre-04122018\ProjetLibre\Drive\bin\Debug\netcoreapp2.1\Drive.deps.json
+C:\Users\sigt_sf\Documents\GitHub\ProjetLibre-04122018\ProjetLibre\Drive\bin\Debug\netcoreapp2.1\Drive.runtimeconfig.json
+C:\Users\sigt_sf\Documents\GitHub\ProjetLibre-04122018\ProjetLibre\Drive\bin\Debug\netcoreapp2.1\Drive.runtimeconfig.dev.json
+C:\Users\sigt_sf\Documents\GitHub\ProjetLibre-04122018\ProjetLibre\Drive\bin\Debug\netcoreapp2.1\Drive.dll
+C:\Users\sigt_sf\Documents\GitHub\ProjetLibre-04122018\ProjetLibre\Drive\obj\Debug\netcoreapp2.1\Drive.csprojAssemblyReference.cache
+C:\Users\sigt_sf\Documents\GitHub\ProjetLibre-04122018\ProjetLibre\Drive\obj\Debug\netcoreapp2.1\Drive.csproj.CoreCompileInputs.cache
+C:\Users\sigt_sf\Documents\GitHub\ProjetLibre-04122018\ProjetLibre\Drive\obj\Debug\netcoreapp2.1\Drive.AssemblyInfoInputs.cache
+C:\Users\sigt_sf\Documents\GitHub\ProjetLibre-04122018\ProjetLibre\Drive\obj\Debug\netcoreapp2.1\Drive.AssemblyInfo.cs
+C:\Users\sigt_sf\Documents\GitHub\ProjetLibre-04122018\ProjetLibre\Drive\bin\Debug\netcoreapp2.1\Drive.pdb
+C:\Users\sigt_sf\Documents\GitHub\ProjetLibre-04122018\ProjetLibre\Drive\obj\Debug\netcoreapp2.1\Drive.dll
+C:\Users\sigt_sf\Documents\GitHub\ProjetLibre-04122018\ProjetLibre\Drive\obj\Debug\netcoreapp2.1\Drive.pdb

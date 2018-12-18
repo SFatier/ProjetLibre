@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{6
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "Auth\App.csproj", "{F60F8C68-66F8-4551-AFD7-5D4B4099346B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IHM", "..\..\GPE-ETNA\IHM\IHM.csproj", "{A24EFBF8-680B-4688-8385-705668D4FF27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drive", "Drive\Drive.csproj", "{588E72DC-2C89-4748-8A4F-F7B8A660233E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{F60F8C68-66F8-4551-AFD7-5D4B4099346B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F60F8C68-66F8-4551-AFD7-5D4B4099346B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F60F8C68-66F8-4551-AFD7-5D4B4099346B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A24EFBF8-680B-4688-8385-705668D4FF27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A24EFBF8-680B-4688-8385-705668D4FF27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A24EFBF8-680B-4688-8385-705668D4FF27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A24EFBF8-680B-4688-8385-705668D4FF27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{588E72DC-2C89-4748-8A4F-F7B8A660233E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{588E72DC-2C89-4748-8A4F-F7B8A660233E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{588E72DC-2C89-4748-8A4F-F7B8A660233E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{588E72DC-2C89-4748-8A4F-F7B8A660233E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using App.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using GPE;
+using File = App.Models.File;
 
 namespace App.Controllers
 {
@@ -25,6 +27,23 @@ namespace App.Controllers
         public IActionResult Index()
         {
             List<File> lstfiles = ReferentielManager.Instance.GetAllFile();
+
+            DropBox DBB = new DropBox("wvay6mx0i0a2gbo", "PTM_Centralized");
+            DBB.GetDBClient("yJLkyP3VBKAAAAAAAAABcVTOpcwDTZ8csVJn41cUmt2bi0hbkP-bHcFnzDFucWu4");
+            var lst_files_dropbox = DBB.GetItems();
+
+            foreach (var fichier in lst_files_dropbox)
+            {
+                File file_a_ajoute = new File();
+                file_a_ajoute.isInProject = false;
+                file_a_ajoute.IdDropbox = fichier.IdDropbox;
+                file_a_ajoute.Nom =  "[DROPBOX] "+ fichier.Nom;
+                file_a_ajoute.Path = fichier.Path;
+                file_a_ajoute.Type = fichier.Type;
+                file_a_ajoute.DateCreation = (DateTime) fichier.DateCreation;
+                lstfiles.Add(file_a_ajoute);
+            }
+   
             return View(lstfiles);
         }
 

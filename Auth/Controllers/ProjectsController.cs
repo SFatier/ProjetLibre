@@ -14,6 +14,7 @@ namespace App.Controllers
         {
            List<Projet> lstproject = ReferentielManager.Instance.GetAllProjet();
             ViewData["lstproject"] = lstproject;
+            ViewBag.test = 1;
             return View(lstproject);
         }
                 

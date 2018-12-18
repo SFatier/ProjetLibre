@@ -9,6 +9,7 @@ namespace App.Models
     {
         public bool isInProject;
         public int Id { get; set; }
+        public string IdDropbox { get; set; }
         public string Nom { get; set; }
         public string Path { get; set; }
         public string Type { get; set; }
