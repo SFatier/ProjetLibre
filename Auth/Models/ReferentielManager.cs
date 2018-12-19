@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GPE;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +14,11 @@ namespace App.Models
         private IGroupeService _serviceGroups;
         private ITask _serviceTask;
 
-        #region [ Singleton ]
+        private DropBox DBB;
 
-        private static ReferentielManager s_Instance;
+    #region [ Singleton ]
+
+    private static ReferentielManager s_Instance;
         private static readonly object s_InstanceLocker = new object();
 
         public static ReferentielManager Instance 
@@ -39,8 +42,20 @@ namespace App.Models
             _serviceFile = new FileService();
             _serviceGroups = new GroupService();
             _serviceTask = new TaskService();
+            
+            DBB  = new DropBox("wvay6mx0i0a2gbo", "PTM_Centralized");
         }
-        
+        /*DROPBOX*/
+
+        public void SetDBB(DropBox _DBB)
+        {
+            DBB = _DBB;
+        }
+        public DropBox GetDBB()
+        {
+            return DBB;
+        }
+
         /*Projet*/
         public List<Projet> GetAllProjet()
         {
@@ -146,6 +161,25 @@ namespace App.Models
             List < File > lst =   _serviceFile.Get();
             if (lst == null)
                 lst = new List<File>();
+
+
+            /*Recuperation des fichiers dropbox*/
+            if (DBB != null)
+            {
+                var lst_files_dropbox = DBB.GetItems();
+                foreach (var fichier in lst_files_dropbox)
+                {
+                    File file_a_ajoute = new File();
+                    file_a_ajoute.isInProject = false;
+                    file_a_ajoute.IdDropbox = fichier.IdDropbox;
+                    file_a_ajoute.Nom = fichier.Nom;
+                    file_a_ajoute.Path = fichier.Path;
+                    file_a_ajoute.Type = fichier.Type;
+                    file_a_ajoute.DateCreation = (DateTime)fichier.DateCreation;
+                    lst.Add(file_a_ajoute);
+                }
+            }
+
             return lst;
         }
                

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using GPE;
 using File = App.Models.File;
@@ -15,58 +13,85 @@ namespace App.Controllers
 {
     public class FilesController : Controller
     {
-
+        private List<File> lstfiles = new List<File>();
+        private DropBox DBB = ReferentielManager.Instance.GetDBB();
+        
         public IConfiguration Configuration { get; set; }
 
         public FilesController(IConfiguration config)
         {
             Configuration = config;
+            lstfiles = ReferentielManager.Instance.GetAllFile();
         }
 
         // GET: Files
-        public IActionResult Index()
+        public IActionResult Index(int selected = 1)
         {
-            List<File> lstfiles = ReferentielManager.Instance.GetAllFile();
+           ViewBag.btnGroup = selected;
 
-            DropBox DBB = new DropBox("wvay6mx0i0a2gbo", "PTM_Centralized");
-            DBB.GetDBClient("yJLkyP3VBKAAAAAAAAABcVTOpcwDTZ8csVJn41cUmt2bi0hbkP-bHcFnzDFucWu4");
-            var lst_files_dropbox = DBB.GetItems();
-
-            foreach (var fichier in lst_files_dropbox)
-            {
-                File file_a_ajoute = new File();
-                file_a_ajoute.isInProject = false;
-                file_a_ajoute.IdDropbox = fichier.IdDropbox;
-                file_a_ajoute.Nom =  "[DROPBOX] "+ fichier.Nom;
-                file_a_ajoute.Path = fichier.Path;
-                file_a_ajoute.Type = fichier.Type;
-                file_a_ajoute.DateCreation = (DateTime) fichier.DateCreation;
-                lstfiles.Add(file_a_ajoute);
-            }
-   
+            ViewData["_Index_Local"] = lstfiles.Where(f => f.Id != 0).ToList();
+            ViewData["_Index_Dropbox"] = lstfiles.Where(f => f.Id ==  0).ToList();
+          
             return View(lstfiles);
         }
 
         // GET: Files/Details/5
         public IActionResult Details(int id)
         {
-            var file = ReferentielManager.Instance.GetFileById(id);
-            if (file == null)
+            var file = lstfiles.Find(f => f.Id.Equals(id) || f.IdDropbox.Equals(id));
+
+            if (file.Id != 0)
             {
-                return NotFound();
+                if (file == null)
+                {
+                    return NotFound();
+                }
             }
 
             return View(file);
         }
 
+        // GET: Files/Visualiser/5
+        public IActionResult Visualiser(int id)
+        {
+            var file = lstfiles.Find(f =>f.IdDropbox.Equals(id));
+            
+            return View(file);
+        }
+
+        // GET: Files/Telecharger/5
+        public IActionResult Telecharger(int id, string pathlocal)
+        {
+            var file = lstfiles.Find(f => f.IdDropbox.Equals(id));
+            DBB.Download(file.Path, file.Nom, pathlocal, file.Nom);
+            return RedirectToAction(nameof(Index)); 
+        }
+
+        // POST: Files/Importer/5
+        [HttpPost]
+        public async Task<IActionResult> Importer(string path, string file_name, Microsoft.AspNetCore.Http.IFormFile path_local)
+        {
+            File file = new File() { Path = Configuration["folderTmp"] + path_local.FileName, Nom = path_local.FileName, MyImage = path_local };
+
+            using (var stream = new System.IO.FileStream(file.Path, System.IO.FileMode.Create))
+            {
+                await file.MyImage.CopyToAsync(stream);
+            }
+
+            DBB.Upload(path, path_local.FileName, file.Path);
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: Files/Ouvrir
         public IActionResult Ouvrir(int id)
         {
-            var file = ReferentielManager.Instance.GetFileById(id);
+            var file = lstfiles.Find(f => f.Id.Equals(id));
 
-            string cmd = "explorer.exe";
-            string arg = "/select, " + file.Path;
-            System.Diagnostics.Process.Start(cmd, arg);
+            if (file.Id != 0) { 
+                string cmd = "explorer.exe";
+                string arg = "/select, " + file.Path;
+                System.Diagnostics.Process.Start(cmd, arg);
+            }
 
             return RedirectToAction("Index", "Files");
         }
@@ -78,8 +103,6 @@ namespace App.Controllers
         }
 
         // POST: Files/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nom, MyImage")] File file)
@@ -103,10 +126,14 @@ namespace App.Controllers
         // GET: Files/Edit/5
         public IActionResult Edit(int id)
         {
-            var file = ReferentielManager.Instance.GetFileById(id);
-            if (file == null)
+            var file = lstfiles.Find(f => f.Id.Equals(id) || f.IdDropbox.Equals(id));
+
+            if (file.Id != 0)
             {
-                return NotFound();
+                if (file == null)
+                {
+                    return NotFound();
+                }
             }
 
             #region [Affichage du pdf]
@@ -127,8 +154,6 @@ namespace App.Controllers
         }
         
         // POST: Files/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("Id,Nom,Path,Type,DateCreation")] File file)
@@ -163,12 +188,19 @@ namespace App.Controllers
         // GET: Files/Delete/5
         public IActionResult Delete(int id)
         {
-            var file = ReferentielManager.Instance.GetFileById(id);
-            if (file == null)
-            {
-                return NotFound();
-            }
+            var file = lstfiles.Find(f => f.Id.Equals(id) || f.IdDropbox.Equals(id));
 
+            if (file.Id != 0)
+            {
+                if (file == null)
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                DBB.Delete(file.Path);
+            }
             return View(file);
         }
 
@@ -183,7 +215,8 @@ namespace App.Controllers
 
         private bool FileExists(int id)
         {
-           File file = ReferentielManager.Instance.GetFileById(id);
+            var file = lstfiles.Find(f => f.Id.Equals(id) || f.IdDropbox.Equals(id));
+
             if (file != null)
             {
                 return true;

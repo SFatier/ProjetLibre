@@ -1,0 +1,51 @@
+﻿@model IEnumerable<App.Models.File>
+
+    </br>
+    </br>
+        <form  enctype="multipart/form-data">
+            <button type="button" id="btnImport">Importer</button>
+            <input type="file" id="FileUpload" style="display:none;" />
+        </form>
+        </br>
+        </br>
+
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nom)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Type)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DateCreation)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewData["_Index_Dropbox"] as IEnumerable<App.Models.File>)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateCreation)
+                        </td>
+                        <td>
+                            <a asp-action="Visualiser" asp-route-id="@item.IdDropbox">Visualiser</a>|
+                            <a asp-action="Telecharger" asp-route-id="@item.IdDropbox">Telecharger</a>|
+                            <a asp-action="Delete" asp-route-id="@item.IdDropbox">Supprimer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+

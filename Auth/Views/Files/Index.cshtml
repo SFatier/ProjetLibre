@@ -4,6 +4,18 @@
     ViewData["Title"] = "Index";
 }
 
+<style>
+    .btn:active {
+        background-color: yellow;
+    }
+
+    .btn.active {
+        color: #333;
+        background-color: red;
+    }
+
+</style>
+
 <div class="main">
     <!-- MAIN CONTENT -->
     <div class="main-content">
@@ -11,57 +23,25 @@
             <!-- OVERVIEW -->
             <div class="panel panel-headline">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Liste des fichiers</h3>
+                    <h3 class="panel-title">Liste des fichiers et dossiers</h3>
                     <p>
                         <a asp-action="Create">Nouveau fichier</a>
                     </p>
                 </div>
                 <div class="panel-body">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-secondary active">Local</button>
+                        <button type="button" class="btn btn-secondary">Dropbox</button>
+                        @*<button type="button" class="btn btn-secondary">Google</button>*@
+                    </div>
                     <div class="row">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Nom)
-                                    </th>
-                                    @*<th>
-                                        @Html.DisplayNameFor(model => model.Path)
-                                    </th>*@
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Type)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.DateCreation)
-                                    </th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Nom)
-                                        </td>
-                                        @*<td>
-                                            @Html.DisplayFor(modelItem => item.Path)
-                                        </td>*@
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Type)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.DateCreation)
-                                        </td>
-                                        <td>
-                                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>|
-                                            <a asp-action="Ouvrir" asp-route-id="@item.Id">Ouvrir</a> |
-                                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                        <div id="IndexLocal">
+                            @Html.Partial("_Index_Local.cshtml", ViewData["_Index_Local"])
+                        </div>
+                        <div id="IndexDropbox">
+                            @Html.Partial("_Index_Dropbox.cshtml", ViewData["_Index_Dropbox"])
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -71,6 +51,63 @@
     <!-- END MAIN CONTENT -->
 </div>
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+    $(document).ready(function () {
+        if (@ViewBag.btnGroup == 1) {
+            $("#IndexLocal").show();
+            $("#IndexDropbox").hide();
+        } else {
+            $("#IndexLocal").hide();
+            $("#IndexDropbox").show();
+        }
+
+
+    });
+
+
+    $("#FileUpload").on("chnage", function () {
+        console.log($(this));
+
+        var file = {
+            path: "",
+            file_name: $("input#FileUpload").prop('files')[0].name,
+            path_local: $("input#FileUpload").prop('files')[0]
+        };
+
+         $.ajax({
+                url: "@Url.Action("Importer", "Files")",
+                type: "POST",
+                dataType: "json",
+                data: file,
+                success: function (response) {
+                    response ? alert("It worked!") : alert("It didn't work.");
+                }
+            });
+
+    });
+
+    $("#btnImport").on("click", function () {
+        $("#FileUpload").click();
+    });
+
+    $(".btn-group > .btn").click(function () {
+        $(".btn-group > .btn").removeClass("active");
+        $(this).addClass("active");
+        console.log(this.innerHTML);
+        var selected = (this.innerHTML == "Dropbox" ? 2 : 1);
+        if (selected == 1) {
+            $("#IndexLocal").show();
+            $("#IndexDropbox").hide();
+        } else {
+            $("#IndexLocal").hide();
+            $("#IndexDropbox").show();
+        }
+    });
+</script>
+}
 
 
 

@@ -6,26 +6,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Auth.Models;
 using App.Models;
+using GPE;
 
 namespace Auth.Controllers
 {
     public class HomeController : Controller
     {
+        private DropBox DBB = ReferentielManager.Instance.GetDBB();
+
         public IActionResult Index()
         {
-/*
-            List<Projet> lstProjet = ReferentielManager.Instance.GetAllProjet();
-            List<File> lstFile = ReferentielManager.Instance.GetAllFile();
+            DBB.GetDBClient("yJLkyP3VBKAAAAAAAAABcVTOpcwDTZ8csVJn41cUmt2bi0hbkP-bHcFnzDFucWu4");
 
-            if (lstProjet == null)
-                lstProjet = new List<Projet>();
-
-            ViewBag.Projet = lstProjet.Count();
-            ViewBag.Fichier = (lstFile == null ? 0 : lstFile.Count());
-
-            ViewBag.getListProgressProject = lstProjet;
-
-*/
             ViewBag.Projet = 10;
             ViewBag.Fichier = 10;
             Projet projet = new Projet() { Id = 1, Description = "test", Date = DateTime.Now, Nom = "Net5", Progress = "23%" };
