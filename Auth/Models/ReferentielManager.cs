@@ -173,9 +173,10 @@ namespace App.Models
                     file_a_ajoute.isInProject = false;
                     file_a_ajoute.IdDropbox = fichier.IdDropbox;
                     file_a_ajoute.Nom = fichier.Nom;
-                    file_a_ajoute.Path = fichier.Path;
+                    file_a_ajoute.Path = fichier.path;
                     file_a_ajoute.Type = fichier.Type;
-                    file_a_ajoute.DateCreation = (DateTime)fichier.DateCreation;
+                    if (fichier.DateCreation != null)
+                        file_a_ajoute.DateCreation = (DateTime)fichier.DateCreation;
                     lst.Add(file_a_ajoute);
                 }
             }

@@ -242,20 +242,22 @@ namespace GPE
         /// <param name="DownloadFolderPath">Dossier local qui possède le fichier</param>  
         /// <param name="DownloadFileName">Nom du fichier en local</param>  
         /// <returns></returns>  
-        public bool Download(string DropboxFolderPath, string DropboxFileName, string DownloadFolderPath, string DownloadFileName)
+        public async void Download(string folder, string file)
         {
             try
             {
-                var response = DBClient.Files.DownloadAsync(DropboxFolderPath + DropboxFileName);
-                using (var fileStream = System.IO.File.Create(DownloadFolderPath))
+                var response = await DBClient.Files.DownloadAsync(folder);
                 {
-                    response.Result.GetContentAsStreamAsync().Result.CopyTo(fileStream); //Added to wait for the result from Async method  
+                    using (var file_destination = System.IO.File.Create(file))
+                    {
+                        response.GetContentAsStreamAsync().Result.CopyTo(file_destination);
+                    }
                 }
-                return true;
+                //
             }
-            catch (Exception )
+            catch (Exception ex)
             {
-                return false;
+                //
             }
         }
 
@@ -354,8 +356,10 @@ namespace GPE
             List<String> lstFolder = new List<string>();
             foreach (var item in Entries.Where(i => i.IsFolder))
             {
+
                 GPE.File f = new GPE.File(item.AsFolder.Id, item.Name, null, "dossier de fichiers", null, null, "-", false);
-               // f.path = item.PathDisplay;
+                f.path = item.PathDisplay;
+                f.path = item.PathDisplay;
                 lstFiles.Add(f);
             }
 
@@ -367,12 +371,12 @@ namespace GPE
                 DateTime ModifieLe = Convert.ToDateTime( item.AsFile.ServerModified.ToString("f",  CultureInfo.CreateSpecificCulture("fr-FR")));
                 string taille = Convert.ToInt32(((item.AsFile.Size / 1024f) / 1024f) * 1024).ToString();
                 GPE.File f = new GPE.File(item.AsFile.Id, item.Name, null, Path.GetExtension(item.Name), dateDeCreation, ModifieLe, taille, true);
-               // f.path = item.PathDisplay;
+               f.path = item.PathDisplay;
                 lstFiles.Add(f);
             }
             return lstFiles;
         }
-
+             
         #endregion
 
         #region Validation Methods  

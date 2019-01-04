@@ -2,15 +2,17 @@
 
     </br>
     </br>
-        <form  enctype="multipart/form-data">
+        <form enctype="multipart/form-data">
             <button type="button" id="btnImport">Importer</button>
+            <button type="button" id="btnCreateFolder">Creer dossier</button>
+
             <input type="file" id="FileUpload" style="display:none;" />
         </form>
         </br>
         </br>
 
-
-        <table class="table table-hover">
+        <input type="text" class="form-control" id="inptPath"  value="/">
+        <table class="table table-hover " id="table-drive">
             <thead>
                 <tr>
                     <th>
@@ -28,7 +30,7 @@
             <tbody>
                 @foreach (var item in ViewData["_Index_Dropbox"] as IEnumerable<App.Models.File>)
                 {
-                    <tr>
+                    <tr id="@item.Path">
                         <td>
                             @Html.DisplayFor(modelItem => item.Nom)
                         </td>
@@ -39,9 +41,9 @@
                             @Html.DisplayFor(modelItem => item.DateCreation)
                         </td>
                         <td>
-                            <a asp-action="Visualiser" asp-route-id="@item.IdDropbox">Visualiser</a>|
+                            <a asp-action="Visualiser" asp-route-id="@item.IdDropbox">Editer</a>|
                             <a asp-action="Telecharger" asp-route-id="@item.IdDropbox">Telecharger</a>|
-                            <a asp-action="Delete" asp-route-id="@item.IdDropbox">Supprimer</a>
+                            <a asp-action="DeleteDropbox" asp-route-id="@item.IdDropbox">Supprimer</a>
                         </td>
                     </tr>
                 }

@@ -58,7 +58,7 @@
                                     <select  class="select-files form-control" name="files[]" multiple="multiple">
                                         @foreach (var x in getlistFiles)
                                         {
-                                            <option value="@x.Id">@x.Nom </option>
+                                            <option value="@x.Id == 0 ? @x.IdDropbox : @x.Id">@x.Nom </option>
                                         }
                                     </select>
                                 </div>

@@ -27,74 +27,16 @@ namespace App.Controllers
         // GET: Files
         public IActionResult Index(int selected = 1)
         {
-           ViewBag.btnGroup = selected;
+            ViewBag.btnGroup = selected;
 
             ViewData["_Index_Local"] = lstfiles.Where(f => f.Id != 0).ToList();
-            ViewData["_Index_Dropbox"] = lstfiles.Where(f => f.Id ==  0).ToList();
-          
+            ViewData["_Index_Dropbox"] = lstfiles.Where(f => f.Id == 0).ToList();
+            ViewBag.path = "/";
             return View(lstfiles);
         }
 
-        // GET: Files/Details/5
-        public IActionResult Details(int id)
-        {
-            var file = lstfiles.Find(f => f.Id.Equals(id) || f.IdDropbox.Equals(id));
 
-            if (file.Id != 0)
-            {
-                if (file == null)
-                {
-                    return NotFound();
-                }
-            }
-
-            return View(file);
-        }
-
-        // GET: Files/Visualiser/5
-        public IActionResult Visualiser(int id)
-        {
-            var file = lstfiles.Find(f =>f.IdDropbox.Equals(id));
-            
-            return View(file);
-        }
-
-        // GET: Files/Telecharger/5
-        public IActionResult Telecharger(int id, string pathlocal)
-        {
-            var file = lstfiles.Find(f => f.IdDropbox.Equals(id));
-            DBB.Download(file.Path, file.Nom, pathlocal, file.Nom);
-            return RedirectToAction(nameof(Index)); 
-        }
-
-        // POST: Files/Importer/5
-        [HttpPost]
-        public async Task<IActionResult> Importer(string path, string file_name, Microsoft.AspNetCore.Http.IFormFile path_local)
-        {
-            File file = new File() { Path = Configuration["folderTmp"] + path_local.FileName, Nom = path_local.FileName, MyImage = path_local };
-
-            using (var stream = new System.IO.FileStream(file.Path, System.IO.FileMode.Create))
-            {
-                await file.MyImage.CopyToAsync(stream);
-            }
-
-            DBB.Upload(path, path_local.FileName, file.Path);
-            return RedirectToAction(nameof(Index));
-        }
-
-        // GET: Files/Ouvrir
-        public IActionResult Ouvrir(int id)
-        {
-            var file = lstfiles.Find(f => f.Id.Equals(id));
-
-            if (file.Id != 0) { 
-                string cmd = "explorer.exe";
-                string arg = "/select, " + file.Path;
-                System.Diagnostics.Process.Start(cmd, arg);
-            }
-
-            return RedirectToAction("Index", "Files");
-        }
+        #region [Fonction LOCAL]
 
         // GET: Files/Create
         public IActionResult Create()
@@ -116,17 +58,72 @@ namespace App.Controllers
                     await file.MyImage.CopyToAsync(stream);
                 }
                 file.DateCreation = DateTime.Now;
-                file.Type = System.IO.Path.GetExtension(file.Path) ;
+                file.Type = System.IO.Path.GetExtension(file.Path);
                 ReferentielManager.Instance.AddFile(file);
                 return RedirectToAction(nameof(Index));
             }
             return View(file);
         }
 
+        // GET: Files/Delete/5
+        public IActionResult Delete(int id)
+        {
+            var file = lstfiles.Find(f => f.Id.Equals(id) );
+
+            if (file.Id != 0)
+            {
+                if (file == null)
+                {
+                    return NotFound();
+                }
+            }
+            return View(file);
+        }
+
+        // POST: Files/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            ReferentielManager.Instance.DeleteFile(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Files/Details/5
+        public IActionResult Details(int id)
+        {
+            var file = lstfiles.Find(f => f.Id.Equals(id));
+
+            if (file.Id != 0)
+            {
+                if (file == null)
+                {
+                    return NotFound();
+                }
+            }
+
+            return View(file);
+        }
+
+        // GET: Files/Ouvrir
+        public IActionResult Ouvrir(int id)
+        {
+            var file = lstfiles.Find(f => f.Id.Equals(id));
+
+            if (file.Id != 0)
+            {
+                string cmd = "explorer.exe";
+                string arg = "/select, " + file.Path;
+                System.Diagnostics.Process.Start(cmd, arg);
+            }
+
+            return RedirectToAction("Index", "Files");
+        }
+
         // GET: Files/Edit/5
         public IActionResult Edit(int id)
         {
-            var file = lstfiles.Find(f => f.Id.Equals(id) || f.IdDropbox.Equals(id));
+            var file = lstfiles.Find(f => f.Id != 0 && f.Id.Equals(id));
 
             if (file.Id != 0)
             {
@@ -139,10 +136,10 @@ namespace App.Controllers
             #region [Affichage du pdf]
             string filedb = Configuration["folderPDF"];
 
-            //if (System.IO.File.Exists(filedb))
-            //{
-            //        System.IO.File.Delete(filedb);
-            //}
+            if (System.IO.File.Exists(filedb))
+            {
+                System.IO.File.Delete(filedb);
+            }
 
             if (file.Type == "pdf")
                 SaveFileInFolder(filedb, System.IO.File.ReadAllBytes(file.Path));
@@ -152,7 +149,7 @@ namespace App.Controllers
 
             return View(file);
         }
-        
+
         // POST: Files/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -184,38 +181,85 @@ namespace App.Controllers
             }
             return View(file);
         }
+        
+        #endregion
 
-        // GET: Files/Delete/5
-        public IActionResult Delete(int id)
+        #region [Fonction DROPBOX]
+
+        // GET: Files/Telecharger/5
+        public IActionResult Telecharger(string id, string pathlocal)
         {
-            var file = lstfiles.Find(f => f.Id.Equals(id) || f.IdDropbox.Equals(id));
-
-            if (file.Id != 0)
-            {
-                if (file == null)
-                {
-                    return NotFound();
-                }
-            }
-            else
-            {
-                DBB.Delete(file.Path);
-            }
-            return View(file);
+            File file = lstfiles.Where(x => x.IdDropbox != null && x.IdDropbox.Equals(id)).ToList()[0];
+            String home = Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + "Downloads" + @"\" + file.Nom;
+            DBB.Download(file.Path, home);
+            return RedirectToAction(nameof(Index));
         }
-
+        
         // POST: Files/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteDropbox")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public IActionResult DeleteDropbox(string path)
         {
-            ReferentielManager.Instance.DeleteFile(id);
+            DBB.Delete(path);
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Files/Visualiser/5
+        public IActionResult Visualiser(string id)
+        {
+            File file = lstfiles.Where(x => x.IdDropbox != null && x.IdDropbox.Equals(id)).ToList()[0];
+
+            #region [Affichage du pdf]
+            string filedb = Configuration["folderPDF"];
+
+            if (System.IO.File.Exists(filedb))
+            {
+                System.IO.File.Delete(filedb);
+            }
+
+            if (file.Type == "pdf")
+                SaveFileInFolder(filedb, System.IO.File.ReadAllBytes(file.Path));
+
+            ViewBag.type = file.Type;
+            #endregion
+
+            return View(file);
+        }
+
+        // GET: Files/CreateFolder
+        public IActionResult CreateFolder(string path)
+        {
+            DBB.CreateFolder(path);
+            return null;
+        }
+
+        #endregion
+
+
+        // POST: Files/Importer/5
+        [HttpPost]
+        public async Task<IActionResult> Importer(string path, string file_name, Microsoft.AspNetCore.Http.IFormFile path_local)
+        {
+            File file = new File() { Path = Configuration["folderTmp"] + path_local.FileName, Nom = path_local.FileName, MyImage = path_local };
+
+            using (var stream = new System.IO.FileStream(file.Path, System.IO.FileMode.Create))
+            {
+                await file.MyImage.CopyToAsync(stream);
+            }
+
+            DBB.Upload(path, path_local.FileName, file.Path);
+            return RedirectToAction(nameof(Index));
+        }
+        
+
+        /// <summary>
+        /// Vérifie que le fichier existe localement
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private bool FileExists(int id)
         {
-            var file = lstfiles.Find(f => f.Id.Equals(id) || f.IdDropbox.Equals(id));
+            var file = lstfiles.Find(f => f.Id.Equals(id));
 
             if (file != null)
             {
@@ -226,7 +270,7 @@ namespace App.Controllers
                 return false;
             }
         }
-        
+
         /// <summary>
         /// Creer le doc dans le dossier wwwroot/pdf
         /// </summary>

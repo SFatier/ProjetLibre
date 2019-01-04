@@ -64,11 +64,31 @@
             $("#IndexDropbox").show();
         }
 
+        $('#table-drive').on('click', 'tbody tr', function (event) {
+            $(this).addClass('highlight').siblings().removeClass('highlight');
+            var rows = getHighlightRow();
+            if (rows != undefined) {
+                $("#inptPath").val(rows.attr('id'));
+            }
+        });
 
+        var getHighlightRow = function () {
+            return $('table > tbody > tr.highlight');
+        }
+
+        $('#table-drive').on('dblclick', 'tbody tr', function (event) {  
+            alert("double click");
+            $(this).addClass('highlight').siblings().removeClass('highlight');
+            var rows = getHighlightRow();
+            if (rows != undefined) {
+                //envoyer le path parent pour recupérer les enfants // call action
+                $("#inptPath").val(rows.attr('id'));
+            }
+        });
     });
 
 
-    $("#FileUpload").on("chnage", function () {
+    $("#FileUpload").on("change", function () {
         console.log($(this));
 
         var file = {
@@ -91,6 +111,18 @@
 
     $("#btnImport").on("click", function () {
         $("#FileUpload").click();
+    });
+
+    $("#btnCreateFolder").on("click", function () {
+
+         $.ajax({
+                url: "@Url.Action("CreateFolder", "Files")",
+                type: "GET",
+                dataType: "json",
+                success: function (response) {
+                    response ? alert("It worked!") : alert("It didn't work.");
+                }
+            });
     });
 
     $(".btn-group > .btn").click(function () {
